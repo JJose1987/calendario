@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="es">
+    <head>
+        <title>Titulo</title>
+        <meta charset="UTF-8">
+        <meta name="author" content="Juan Jose">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="date" content="2021-01-01" scheme="YYYY-MM-DD">
+        <meta name="identifier" content="" scheme="ISBN">
+        <!--<meta http-equiv="refresh" content="30">-->
+        <link rel="shortcut icon" href="" />
+        <link rel="stylesheet" href="styles.css" />
+        <style>
+
+        </style>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/colorthief@2.3.0/dist/color-thief.min.js"></script>
+        <script language="javascript" type="text/javascript">
+            // Remplazar de la posicion 0 al index por lo indicado
+            String.prototype.replaceAt = function(index, replacement) {
+                return this.substr(0, index) + replacement + this.substr(index + replacement.length);
+            }
+            // Cuanta es el porcentaje de parecido de una palabra con otra
+            String.prototype.levenshtein = function(compared) {
+                var distance = [];
+
+                for (var i0 = 0; i0 <=this.length; i0++) {
+                    distance[i0] = [];
+                    distance[i0][0] = i0;
+                }
+
+                for (var i0 = 0; i0 <= compared.length; i0++) {
+                    distance[0][i0] = i0;
+                }
+                
+                for (var i0 = 1; i0 <=this.length; i0++) {
+                    for (var i1 = 1; i1 <= compared.length; i1++) {
+                        distance[i0][i1] = Math.min(distance[i0 - 1][i1 - 0] + 1,
+                                                    distance[i0 - 0][i1 - 1] + 1,
+                                                    distance[i0 - 1][i1 - 1] + ((this[i0 - 1] == compared[i1 - 1])? 0 : 1));
+                    }
+                }
+                
+                return 100 - ((distance[this.length][compared.length] * this.length) / 100);
+                
+            }
+            // Primera letra en mayúscula
+            String.prototype.capitalize = function() {
+                return this.substr(0, 1).toUpperCase() + this.substr(1).toLowerCase();
+            }
+
+            // Convierte el color de rgb a hexagesimal
+            function rgb2hex(rgb) {
+                rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+
+                function hex(x) {
+                    return ("0" + parseInt(x).toString(16)).slice(-2);
+                }
+                return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+            }
+            
+            // Fecha del sistema
+            var now = new Date().toISOString();
+            var [y, M, d, h, m, s, nm] = now.match(/\d+/g);
+            nm = nm + "000";
+            h  = parseInt(h) + 2;
+            
+            // URL de la pagina
+            var url = window.location.pathname;
+            var url = url.substr(1, url.indexOf('/index.html'));
+
+            // Altura y anchura de la vetana
+            var height = $(window).height();
+            var width  = $(window).width();
+            
+            // Identificar si se ejecuta desde un movil
+            var isPhone = (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i));
+            
+            // Enviar Whatsapp
+            function sendWhatsapp(value) {
+                console.log(value);
+                if (isPhone) {
+                    location.href = 'whatsapp://send?text=' + ((value).replaceAll(' ', '%20')).replaceAll('\n', '%0A');    
+                }
+            }
+
+            $(document).ready(function(e) {
+                main();
+            });
+        </script>
+        <script src="class.js"></script>
+        <script src="functions.js"></script>
+
+    </head>
+    <body>
+        <!-- -->
+        <input type="file" id="image-00" accept="image/*">
+        <!-- -->
+    </body>
+</html>
+
+
+
+
+
+
+
+
