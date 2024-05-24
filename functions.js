@@ -37,7 +37,7 @@ function setColors(e, i) {
         img.onload = function() {
             var colorThief = new ColorThief();
 
-            console.log(colorThief.getPalette(img, 5));
+            alert(colorThief.getPalette(img, 5));
         };
         
         img.src = event.target.result;
