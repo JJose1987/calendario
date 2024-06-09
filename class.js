@@ -1,10 +1,16 @@
 /* JavaScript */
 // Clases
-class Objeto {
+class CalendarPrint {
     /* Constructor donde le pasamos los datos de entrada, para ello le pasamos el nombreparametro = VALUE */
     constructor(kwargs) {
         //*********************************************************************************
-        
+        this.kwargs = {}
+
+        if (typeof this.kwargs['0_colors'] != 'undefined') {
+            this.kwargs['0_colors'] = kwargs['0_colors'];
+        } else {
+            this.kwargs['0_colors'] = [];
+        }
         //*********************************************************************************
     }
     
@@ -15,7 +21,13 @@ class Objeto {
 
     /* Metodo para cargar el valor en el indice */
     set(ix, value) {
-        this.kwargs[ix] = value;
+        //this.kwargs[ix] = value;
+        
+        if (typeof this.kwargs[ix] != 'undefined') {
+            this.kwargs[ix] = value;
+        } else {
+            this.kwargs[ix] = null;
+        }
     }
 
     /* Metodo para retornar la clase en cadena de caracteres */
