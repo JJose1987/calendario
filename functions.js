@@ -1,16 +1,20 @@
 /* JavaScript */
 /* https://www.degraeve.com/reference/urlencoding.php */
 // Variables
-var kwargs = {0: {colors:[]}};
+var kwargs = {};
 const _CalendarPrint = new CalendarPrint(this.kwargs);
 
 // Funciones
 function main() {
     //Si es telefono girar la vista y las imagenes
+    
+    $('input[name=year]').val(++y);
+    
     this._CalendarPrint = new CalendarPrint(this.kwargs);
     //this._CalendarPrint.sets();
 
-    $('#image-00').change(function(e) {setColors(e, 0)});
+    $('input[name=year]').change(function(e) {update()});
+    $('#image-12').change(function(e) {setColors(e, parseInt((this.id).substr(6,9)))});
 
     update();
 }
@@ -25,13 +29,15 @@ function set(object) {
 
 // Actualizar valores de la clase
 function update() {
-    alert('0 = ' + this._CalendarPrint['0_colors']);
-    /*
-    alert('1 = ' + this._CalendarPrint['0_colors'][1]);
-    alert('2 = ' + this._CalendarPrint['0_colors'][2]);
-    alert('3 = ' + this._CalendarPrint['0_colors'][3]);
-    alert('4 = ' + this._CalendarPrint['0_colors'][4]);
-    */
+    for (var i = 0; i <= 12; i++) {
+        if (typeof kwargs[i] == 'undefined') {
+            kwargs[i] = {'colors': []};
+        }
+    }
+    
+    kwargs['year'] = $('input[name=year]').val();
+    
+    alert(kwargs['year']);
 }
 
 // Asignar el valor a los colores
@@ -42,11 +48,7 @@ function setColors(e, i) {
     reader.onload = function(event) {
         var img = new Image();
         img.onload = function() {
-            var colorThief = new ColorThief();
-            
-            //this.kwargs[i + '_colors'] = colorThief.getPalette(img, 5);
-            
-            this._CalendarPrint.set(i + '_colors', colorThief.getPalette(img, 5));
+            kwargs[i]['colors'] = (new ColorThief()).getPalette(img, 5);
             update();
         };
         
