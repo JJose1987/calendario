@@ -100,12 +100,28 @@
     </head>
     <body>
         <!-- -->
-        <b>Año : </b><input type="number" name="year" pattern="\d*" min="0" value="0" />
-        <br />
-        <input type="file" id="image-12" accept="image/*">
-        <button class="btn"><i class="fa fa-upload"></i></button>
-        <button class="btn"><i class="fa fa-download"></i></button>
-        <!-- -->
+        <div class="table" style="width: 50%;">
+            <div>
+                <div>Calendario del Año </div>
+                <div><input type="number" name="year" pattern="\d*" min="0" value="0" /></div>
+            </div>
+            <div>
+                <div>Para la ciudad de </div>
+                <div>
+                    <select name="city">
+                        <option value="28">Madrid</option>
+                        <option value="37">Salamanca</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="table" style="width: 50%;">
+            <div>
+                <div>Portada </div>
+                <div><input type="file" id="image-00" accept="image/*"></div>
+                <div><button class="btn"><i id="d-00" class="fa fa-download"></i></button></div>
+            </div>
+        </div>
     </body>
 </html>
 

@@ -9,9 +9,6 @@ function main() {
     //Si es telefono girar la vista y las imagenes
     
     $('input[name=year]').val(++y);
-    
-    this._CalendarPrint = new CalendarPrint(this.kwargs);
-    //this._CalendarPrint.sets();
 
     $('input[name=year]').change(function(e) {update()});
     $('#image-12').change(function(e) {setColors(e, parseInt((this.id).substr(6,9)))});
@@ -37,7 +34,7 @@ function update() {
     
     kwargs['year'] = $('input[name=year]').val();
     
-    alert(kwargs['year']);
+    // this._CalendarPrint = new CalendarPrint(this.kwargs);
 }
 
 // Asignar el valor a los colores

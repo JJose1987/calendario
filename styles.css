@@ -7,3 +7,20 @@ body {
    text-align: left;
    vertical-align: top;
 }
+/* Table */
+.table {
+    display: table;
+    border-collapse: collapse;
+}
+/* Row */
+.table div {
+    display: table-row;
+}
+/* Cell */
+.table div div {
+    display: table-cell;
+    border: solid #000000 0.1vmax;
+    text-align: left;
+    vertical-align: middle;
+    padding: 0.1vmax;
+}
