@@ -10,6 +10,7 @@ body {
 /* Table */
 .table {
     display: table;
+    width: 99%;
     border-collapse: collapse;
 }
 /* Row */
