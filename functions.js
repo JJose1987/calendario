@@ -9,17 +9,20 @@ var ctx = canvas.getContext('2d');
 canvas.width = 595;
 canvas.height = 842;
 
+
+//https://programadorwebvalencia.com/Javascript-nombre-del-mes-en-castellano/
+
 const __Objeto = new Objeto();
 
 // Funciones
 function main() {
     //Si es telefono girar la vista y las imagenes
-    
+
     $('input[name=year]').val(++y);
 
     $('input[name=year]').change(function(e) {update()});
     $('#image-00').change(function(e) {setColors(e, parseInt((this.id).substr(6,9)))});
-    
+
     // Solo permitir descargar si tiene una imagen cargada
     $('#d-00').click(function(e) {download(parseInt((this.id).substr(3,6)))});
 
@@ -35,7 +38,6 @@ function update() {
     }
 
     kwargs['year'] = $('input[name=year]').val();
-    
 }
 
 // Asignar el valor a los colores
@@ -46,16 +48,32 @@ function setColors(e, i) {
     reader.onload = function(event) {
         var img = new Image();
         img.onload = function() {
-            //(new ColorThief()).getPalette(img, 5)
+            //(new ColorThief()).getPalette(img, 6)
 
-            // Dibujar la imagen que vamos a utilizar
+            var w = canvas.width;
+            var h = canvas.height;
 
-            ctx.drawImage(img, 0, 0, img.width, img.height);
+            if (i == 0) {
+                // Dibujar la portada
+                if (w <= img.width) {
+                    w = img.width;
+                }
+
+                if (h <= img.height) {
+                    h = img.height;
+                }
+
+                ctx.drawImage(img, ((canvas.width - w) / 2), ((canvas.height - h) / 2), w, h);
+                
+                // Elegir donde se pone con una select
+                
+                // Bordes por toda la foto con un fill [https://www.w3schools.com/jsref/canvas_fill.asp] y nombre 'Calendario + año' (esto va abajo) [https://www.w3schools.com/graphics/canvas_text.asp]
+            }
         };
-        
+
         img.src = event.target.result;
     };
-    
+
     reader.readAsDataURL(file);
 }
 
@@ -63,7 +81,7 @@ function setColors(e, i) {
 function download(i) {
     // Convertir el lienzo a una imagen base64
     var dataURL = canvas.toDataURL('image/png');
-    
+
     // Crear un enlace para descargar la imagen
     var downloadLink = document.createElement('a');
     downloadLink.href = dataURL;
