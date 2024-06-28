@@ -104,9 +104,9 @@ function setColors(e, i) {
                     h = img.height;
                 }
 
-                console.log(((canvas.width - w) / 2) * -1 + ', ' + ((canvas.height - h) / 2) + ', ' + w / 2 + ', ' + h / 2);
+                console.log(-1 * ((canvas.width - w) / 2) + ', ' + ((canvas.height - h) / 2) + ', ' + w / 2 + ', ' + h / 2);
 
-                ctx.drawImage(img, ((canvas.width - w) / 2) * -1, ((canvas.height - h) / 2), w / 2, h / 2);
+                ctx.drawImage(img, -1 * ((canvas.width - w) / 2), ((canvas.height - h) / 2), w / 2, h / 2);
                 
             }
         };
