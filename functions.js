@@ -18,13 +18,18 @@ const __Objeto = new Objeto();
 function main() {
     //Si es telefono girar la vista y las imagenes
 
+    // Valores base
     $('[name=year]').val(++y);
+    
+    // Dibujar algo en el lienzo (por ejemplo, un rectángulo rojo)
+    ctx.fillStyle = 'red';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     $('[name=year]').change(function(e) {update()});
-    $('#image-00').change(function(e) {setColors(e, parseInt((this.id).substr(6,9)))});
+    $('#image-00, #image-01').change(function(e) {setColors(e, parseInt((this.id).substr(6,9)))});
 
     // Solo permitir descargar si tiene una imagen cargada
-    $('#d-00').click(function(e) {download(parseInt((this.id).substr(3,6)))});
+    $('#d-00, #d-01').click(function(e) {download(parseInt((this.id).substr(3,6)))});
     
     // Posicion del texto de la portada
     $('[name=position]').change(function(e) {update()});
@@ -52,8 +57,15 @@ function setColors(e, i) {
     reader.onload = function(event) {
         var img = new Image();
         img.onload = function() {
-            var colors = (new ColorThief()).getPalette(img, 6)
-
+            // Extraer colores
+            var colors = (new ColorThief()).getPalette(img, 6);
+            
+            for (var j = 0; j < 6; j++) {
+                kwargs[i]['colors'][j] = '#' + ('0' + parseInt(colors[j][0]).toString(16)).slice(-2)
+                    + ('0' + parseInt(colors[j][1]).toString(16)).slice(-2)
+                    + ('0' + parseInt(colors[j][2]).toString(16)).slice(-2);
+            }
+            // Dibujar
             var w = canvas.width;
             var h = canvas.height;
 
@@ -70,17 +82,32 @@ function setColors(e, i) {
                 ctx.drawImage(img, ((canvas.width - w) / 2), ((canvas.height - h) / 2), w, h);
                 
                 msg = 'Calendario ' + kwargs['year'];
-
-                ctx.font = '50px monospace';
-                
-                console.log(colors[0]);
-                
-                //ctx.fillStyle = colors[0];
-                ctx.fillText(msg, 10, 80);
-
-                // Elegir donde se pone con una select
+                ctx.font = (h / 12) + 'px monospace';
+                ctx.fillStyle = kwargs[i]['colors'][0];
+                if (kwargs['position'] == 'u') {
+                    ctx.fillText(msg, 10, (h / 12));
+                } else if (kwargs['position'] == 'm') {
+                    console.log('medio');
+                    ctx.fillText(msg, 10, (h / 2) + (h / 12));
+                } else if (kwargs['position'] == 'b') {
+                    ctx.fillText(msg, 10, h - (h / 12));
+                }
                 
                 // Bordes por toda la foto con un fill [https://www.w3schools.com/jsref/canvas_fill.asp] y nombre 'Calendario + año' (esto va abajo) [https://www.w3schools.com/graphics/canvas_text.asp]
+            } else {
+                // Dibujar imagen
+                if (w <= img.width) {
+                    w = img.width;
+                }
+
+                if (h <= img.height) {
+                    h = img.height;
+                }
+
+                console.log(((canvas.width - w) / 2) * -1 + ', ' + ((canvas.height - h) / 2) + ', ' + w / 2 + ', ' + h / 2);
+
+                ctx.drawImage(img, ((canvas.width - w) / 2) * -1, ((canvas.height - h) / 2), w / 2, h / 2);
+                
             }
         };
 
