@@ -64,7 +64,26 @@
                 }
                 return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
             }
-            
+
+            // Obtener el numero de la semana
+            Date.prototype.iso8601Week = function () {
+                // Create a copy of the current date, we don't want to mutate the original
+                const date = new Date(this.getTime());
+
+                // Find Thursday of this week starting on Monday
+                date.setDate(date.getDate() + 4 - (date.getDay() || 7));
+                const thursday = date.getTime();
+
+                // Find January 1st
+                date.setMonth(0); // January
+                date.setDate(1);  // 1st
+                const jan1st = date.getTime();
+
+                // Round the amount of days to compensate for daylight saving time
+                const days = Math.round((thursday - jan1st) / 86400000); // 1 day = 86400000 ms
+                return Math.floor(days / 7) + 1;
+            };
+
             // Fecha del sistema
             var now = new Date().toISOString();
             var [y, M, d, h, m, s, nm] = now.match(/\d+/g);
