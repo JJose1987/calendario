@@ -19,7 +19,7 @@ function main() {
 
     // Valores base
     $('[name=year]').val(++y);
-    
+
     // Dibujar algo en el lienzo (por ejemplo, un rectángulo rojo)
     ctx.fillStyle = '#ff0000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -28,8 +28,8 @@ function main() {
     $('#image-00, #image-01').change(function(e) {setColors(e, parseInt((this.id).substr(6,9)))});
 
     // Solo permitir descargar si tiene una imagen cargada
-    $('#d-00, #d-01').click(function(e) {download(parseInt((this.id).substr(3,6)))});
-    
+    $("[class='btn fa fa-download']").click(function(e) {download(parseInt((this.id).substr(3,6)))});
+
     // Posicion del texto de la portada
     $('[name=position]').change(function(e) {update()});
 
@@ -41,6 +41,12 @@ function update() {
     for (var i = 0; i <= 12; i++) {
         if (typeof kwargs[i] == 'undefined') {
             kwargs[i] = {'colors': []};
+
+            for (var j = 0; j < 9; j++) {
+                kwargs[i]['colors'][j] = '#' + ('0' + parseInt(Math.random() * 255).toString(16)).slice(-2)
+                    + ('0' + parseInt(Math.random() * 255).toString(16)).slice(-2)
+                    + ('0' + parseInt(Math.random() * 255).toString(16)).slice(-2);
+            }
         }
     }
 
@@ -52,17 +58,23 @@ function update() {
 function setColors(e, i) {
     var file = e.target.files[0];
     var reader = new FileReader();
+    
+    for (var j = 0; j < 9; j++) {
+        kwargs[i]['colors'][j] = '#' + ('0' + parseInt(Math.random() * 255).toString(16)).slice(-2)
+            + ('0' + parseInt(Math.random() * 255).toString(16)).slice(-2)
+            + ('0' + parseInt(Math.random() * 255).toString(16)).slice(-2);
+            
+            rgbToHex
+    }
 
     reader.onload = function(event) {
         var img = new Image();
         img.onload = function() {
             // Extraer colores
             var colors = (new ColorThief()).getPalette(img, 9);
-            
+
             for (var j = 0; j < colors.length; j++) {
-                kwargs[i]['colors'][j] = '#' + ('0' + parseInt(colors[j][0]).toString(16)).slice(-2)
-                    + ('0' + parseInt(colors[j][1]).toString(16)).slice(-2)
-                    + ('0' + parseInt(colors[j][2]).toString(16)).slice(-2);
+                kwargs[i]['colors'][j] = rgbToHex(colors[j][0], colors[j][1], colors[j][2]);
             }
 
             // Dibujar
@@ -80,10 +92,12 @@ function setColors(e, i) {
                 }
 
                 ctx.drawImage(img, ((canvas.width - w) / 2), ((canvas.height - h) / 2), w, h);
-                
+
                 msg = 'Calendario ' + kwargs['year'];
+
                 ctx.font = (h / 12) + 'px monospace';
-                ctx.fillStyle = kwargs[i]['colors'][0];
+                ctx.fillStyle = calculateTints(kwargs[i]['colors'][8], 11)[10];
+
                 if (kwargs['position'] == 'u') {
                     ctx.fillText(msg, 10, (h / 12));
                 } else if (kwargs['position'] == 'm') {
@@ -91,58 +105,62 @@ function setColors(e, i) {
                 } else if (kwargs['position'] == 'b') {
                     ctx.fillText(msg, 10, h - (h / 12));
                 }
-                
-                // Bordes por toda la foto con un fill [https://www.w3schools.com/jsref/canvas_fill.asp] y nombre 'Calendario + año' (esto va abajo) [https://www.w3schools.com/graphics/canvas_text.asp]
             } else {
                 aux_month = i - 1;
 
                 // 595 x 421
                 h = canvas.height / 2;
                 ctx.drawImage(img, 0, 0, canvas.width, h);
-                
+
                 ctx.rect(0, h, canvas.width, canvas.height);
                 ctx.fillStyle = kwargs[i]['colors'][0];
                 ctx.fill();
-                
-                w = canvas.width;
-                h = canvas.height;
-                l = (h / 14);
-                
-                ctx.font = (w / 14) + 'px monospace';
-                ctx.fillStyle = kwargs[i]['colors'][1];
 
                 var tb_msg = [];
-                
-                // Replantear para imprimir dia a dia por el tema de los colores de los festivos y las lunas
-                /*
-
-                tb_msg[0] = '   |Lu Ma Mi Ju Vi Sa Do';
-                
+                tb_msg[0] = ['  ', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'];
 
                 ant_NumberWeek = new Date(kwargs['year'], aux_month, 1).iso8601Week();
-                tb_msg[1] = ('0' + parseInt(ant_NumberWeek).toString()).slice(-2) + ' ';
+                tb_msg[1] = [];
+                tb_msg[1][0] = ('0' + parseInt(ant_NumberWeek).toString()).slice(-2);
 
-                for (var j = 1; j < new Date(kwargs['year'], aux_month, 1).getDay(); j++) {
-                    tb_msg[1] += '   ';
+                for (var x = 1; x < new Date(kwargs['year'], aux_month, 1).getDay(); x++) {
+                    tb_msg[1][x] = '  ';
                 }
 
                 for (var j = 1; j <= new Date(kwargs['year'], aux_month, 0).getDate(); j++) {
                     act_NumberWeek = new Date(kwargs['year'], aux_month, j).iso8601Week();
 
                     if (act_NumberWeek != ant_NumberWeek) {
+                        x = 0;
                         ant_NumberWeek = act_NumberWeek;
-                        tb_msg[ant_NumberWeek] = ('0' + parseInt(ant_NumberWeek).toString()).slice(-2) + '|';
+
+                        tb_msg[ant_NumberWeek] = [];
+                        tb_msg[ant_NumberWeek][x++] = ('0' + parseInt(ant_NumberWeek).toString()).slice(-2);
                     }
 
-                    tb_msg[ant_NumberWeek] += ('0' + parseInt(j).toString()).slice(-2) + ' ';
-                }
-                
-                for (var j = 0; j < tb_msg.length; j++) {
-                    ctx.fillText(tb_msg[j], 0, (h / 2) + (j * l));
+                    tb_msg[ant_NumberWeek][x++] = ('0' + parseInt(j).toString()).slice(-2);
                 }
 
-                */
+                w = canvas.width;
+                h = canvas.height;
+
+                for (var y = 0; y < tb_msg.length; y++) {
+                    for (var x = 0; x < (tb_msg[y]).length; x++) {
+                        ctx.font = (w / 14) + 'px monospace';
+                        ctx.fillStyle = calculateTints(kwargs[i]['colors'][8], 11)[5];
+                        if (x == 0 || y == 0) {
+                            ctx.fillStyle = calculateTints(kwargs[i]['colors'][8], 11)[10];
+                        }
+
+                        ctx.fillText(tb_msg[y][x], (x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2));
+                    }
+                }
                 
+                ctx.font = (w / 14) + 'px monospace';
+                ctx.fillStyle = calculateTints(kwargs[i]['colors'][8], 11)[10];
+
+                msg = new Intl.DateTimeFormat(userLanguage, { month: 'long'}).format(new Date(kwargs['year'], aux_month)) + ' ' + kwargs['year'];
+                ctx.fillText(msg.capitalize(), 10, ((y + 1) * (h / 15)) + (h / 2));
             }
         };
 
@@ -167,4 +185,18 @@ function download(i) {
 
     // Simular el clic en el enlace para iniciar la descarga
     downloadLink.click();
+}
+
+// Calcular Tints de un color dado
+function calculateTints(color, steps) {
+    const rgb = hexToRgb(color);
+    const tints = [];
+    for (let i = 1; i <= steps; i++) {
+        const factor = i / (steps + 1);
+        const r = Math.round(rgb.r + (255 - rgb.r) * factor);
+        const g = Math.round(rgb.g + (255 - rgb.g) * factor);
+        const b = Math.round(rgb.b + (255 - rgb.b) * factor);
+        tints.push(rgbToHex(r, g, b));
+    }
+    return tints;
 }

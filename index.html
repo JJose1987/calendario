@@ -55,14 +55,19 @@
                 return this.substr(0, 1).toUpperCase() + this.substr(1).toLowerCase();
             }
 
-            // Convierte el color de rgb a hexagesimal
-            function rgb2hex(rgb) {
-                rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+            // Convertir Hexagemial a RGB
+            function hexToRgb(hex) {
+                hex = hex.replace('#', '');
+                const bigint = parseInt(hex, 16);
+                const r = (bigint >> 16) & 255;
+                const g = (bigint >> 8) & 255;
+                const b = bigint & 255;
+                return { r: r, g: g, b: b };
+            }
 
-                function hex(x) {
-                    return ("0" + parseInt(x).toString(16)).slice(-2);
-                }
-                return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+            // Convertir RGB a Hexagemial
+            function rgbToHex(r, g, b) {
+                return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
             }
 
             // Obtener el numero de la semana
@@ -100,6 +105,9 @@
             
             // Identificar si se ejecuta desde un movil
             var isPhone = (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i));
+
+            // Identificar el idioma
+            var userLanguage = navigator.language || navigator.userLanguage;
             
             // Enviar Whatsapp
             function sendWhatsapp(value) {
@@ -137,7 +145,7 @@
         <div class="table" >
             <div>
                 <div>Portada </div>
-                <div><input type="file" id="image-00" accept="image/*"></div>
+                <div><input type="file" accept="image/*" id="image-00" ></div>
                 <div>
                     <select name="position">
                         <option value="u">Arriba</option>
@@ -145,14 +153,14 @@
                         <option value="b">Abajo</option>
                     </select>
                 </div>
-                <div><button class="btn"><i id="d-00" class="fa fa-download"></i></button></div>
+                <div><button class="btn fa fa-download" id="d-00"></button></div>
             </div>
         </div>
         <div class="table" >
             <div>
                 <div>Enero </div>
-                <div><input type="file" id="image-01" accept="image/*"></div>
-                <div><button class="btn"><i id="d-01" class="fa fa-download"></i></button></div>
+                <div><input type="file" accept="image/*" id="image-01" ></div>
+                <div><button class="btn fa fa-download" id="d-01"></button></div>
             </div>
         </div>
     </body>
