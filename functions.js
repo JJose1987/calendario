@@ -146,11 +146,55 @@ function setColors(e, i) {
 
                 for (var y = 0; y < tb_msg.length; y++) {
                     for (var x = 0; x < (tb_msg[y]).length; x++) {
+                        // Fase lunar
+                        if (x != 0 && y != 0 && tb_msg[y][x] != '  ') {
+                            var moon = (new Date(kwargs['year'], aux_month, tb_msg[y][x])).moonfase()[0];
+                            
+                            if (moon == 1 || moon == 6) {
+                                ctx.beginPath();
+                                ctx.arc((x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2), 5, 0 * Math.PI, 2 * Math.PI);
+                                ctx.fillStyle = calculateTints(kwargs[i]['colors'][4], 11)[10];
+                                ctx.fill();
+                                
+                                ctx.beginPath();
+                                ctx.arc(((x * (w / 8)) + 10) + (moon == 1?-1:1) * 1.5, ((y + 1) * (h / 15)) + (h / 2), 3.5, 0 * Math.PI, 2 * Math.PI);
+                                ctx.fillStyle = kwargs[i]['colors'][0];
+                                ctx.fill();
+                            }
+                            if (moon == 2 || moon == 7) {
+                                ctx.beginPath();
+                                ctx.arc((x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2), 5, 0.5 * Math.PI, 1.5 * Math.PI, (moon == 2));
+                                ctx.fillStyle = calculateTints(kwargs[i]['colors'][4], 11)[10];
+                                ctx.fill();
+                            }
+                            if (moon == 3) {
+                                console.log(tb_msg[y][x] + ' ' + moon);
+                                ctx.beginPath();
+                                ctx.arc((x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2), 5, 1.0 * Math.PI, 0.5 * Math.PI);
+                                ctx.fillStyle = calculateTints(kwargs[i]['colors'][4], 11)[10];
+                                ctx.fill();
+                            }
+                            if (moon == 4) {
+                                ctx.beginPath();
+                                ctx.arc((x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2), 5, 0 * Math.PI, 2 * Math.PI);
+                                ctx.fillStyle = calculateTints(kwargs[i]['colors'][4], 11)[10];
+                                ctx.fill();
+                            }
+                            if (moon == 5) {
+                                console.log(tb_msg[y][x] + ' ' + moon);
+                                ctx.beginPath();
+                                ctx.arc((x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2), 5, 0.5 * Math.PI, 1.0 * Math.PI);
+                                ctx.fillStyle = calculateTints(kwargs[i]['colors'][4], 11)[10];
+                                ctx.fill();
+                            }
+                        }
+
                         ctx.font = (w / 14) + 'px monospace';
                         ctx.fillStyle = calculateTints(kwargs[i]['colors'][8], 11)[5];
                         if (x == 0 || y == 0) {
                             ctx.fillStyle = calculateTints(kwargs[i]['colors'][8], 11)[10];
                         }
+                        // Festivo = kwargs[i]['colors'][4];
 
                         ctx.fillText(tb_msg[y][x], (x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2));
                     }
@@ -158,9 +202,11 @@ function setColors(e, i) {
                 
                 ctx.font = (w / 14) + 'px monospace';
                 ctx.fillStyle = calculateTints(kwargs[i]['colors'][8], 11)[10];
+                
+                name_month = new Intl.DateTimeFormat(userLanguage, { month: 'long'}).format(new Date(kwargs['year'], aux_month));
 
-                msg = new Intl.DateTimeFormat(userLanguage, { month: 'long'}).format(new Date(kwargs['year'], aux_month)) + ' ' + kwargs['year'];
-                ctx.fillText(msg.capitalize(), 10, ((y + 1) * (h / 15)) + (h / 2));
+                msg = name_month + (' ').repeat(15 - name_month.length) + kwargs['year'];
+                ctx.fillText(msg.capitalize(), (1.3 * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2));
             }
         };
 
