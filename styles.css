@@ -21,7 +21,31 @@ body, input, select {
 .table div div {
     display: table-cell;
     border: solid #000000 0.1vmax;
-    text-align: left;
+    text-align: center;
     vertical-align: middle;
     padding: 0.1vmax;
+    width: 20%;
 }
+
+.table div div.c4 {
+    width: 79.99% !important;
+}
+
+.btnone {
+    border-top: none !important;
+}
+
+/* form */
+input, select, button {
+    height: 90%;
+    width: 80%;
+}
+
+/* canvas prev */
+canvas {
+    border: solid #000000 0.1vmax;
+    margin: 0.1vmax;
+
+    width: 35%;
+}
+

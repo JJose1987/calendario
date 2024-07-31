@@ -191,35 +191,28 @@
 
     </head>
     <body>
-        <!-- -->
-        <div class="table" >
+        <div class="table">
             <div>
-                <div>Calendario del Año </div>
                 <div><input type="number" name="year" pattern="\d*" min="0" value="0" /></div>
-            </div>
-            <div>
-                <div>Para la ciudad de </div>
-                <div>
-                    <select name="city">
-                    </select>
-                </div>
+                <div><select name="city"></select></div>
+                <div><select name="dmonth"></select></div>
+                <div><button class="btn fa fa-file-image-o" id="image"></button></div>
+                <div><button class="btn fa fa-save" id="dimage"></button></div>
             </div>
         </div>
-        <div class="table" >
+        <div class="table">
             <div>
-                <div>Portada </div>
-                <div><input type="file" accept="image/*" id="image-00" ></div>
-                <div>
+                <div class="c4 btnone" >
+                    <canvas id="prev" width="595" height="842"></canvas>
+                </div>
+                <div class="btnone">
                     <select name="position">
                         <option value="u">Arriba</option>
                         <option value="m">Medio</option>
                         <option value="b">Abajo</option>
                     </select>
                 </div>
-                <div><button class="btn fa fa-download" id="d-00"></button></div>
             </div>
-        </div>
-        <div class="table" id="dmonth">          
         </div>
     </body>
 </html>
