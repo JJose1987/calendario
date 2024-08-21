@@ -121,10 +121,8 @@ function update() {
     kwargs['city']     = $('[name=city]').val();
     kwargs['dmonth']   = $('[name=dmonth]').val();
     
-    console.log(holyWeek());
-    
     var pcanvas = document.getElementById('prev');
-    draw(kwargs['dmonth'], pcanvas);
+    draw(pcanvas);
 }
 
 // Asignar el valor a los colores
@@ -139,7 +137,6 @@ function upload() {
         document.body.appendChild(gElemInput);
     }
     gElemInput.click();
-    
 
     var file = e.target.files[0];
     var reader = new FileReader();
@@ -166,7 +163,7 @@ function upload() {
 // Descargar la imagen
 function download() {
     // Introducir los para generar la imagen
-    draw(kwargs['dmonth'], canvas);
+    draw(canvas);
     // Convertir el lienzo a una imagen base64
     var dataURL = canvas.toDataURL('image/png');
 
@@ -198,7 +195,7 @@ function calculateTints(color, steps) {
 
 // Calcular festivos del pasado por parametro
 function partyDays(month) {
-    var tb_days = [[1, 1], [1, 6], [5, 1], [8, 15], [10, 12],  [11, 1], [12, 25], [12, 6], [12, 8]];
+    var tb_days = [[0, 1], [0, 6], [4, 1], [7, 15], [9, 12],  [10, 1], [11, 25], [11, 6], [11, 8]];
 
     tb_days[tb_days.length] = holyWeek();
     
@@ -208,353 +205,353 @@ function partyDays(month) {
     tb_days[tb_days.length] = holyWeek(-2);
 
     if (kwargs['city'] == 20) {  /* Gipuzkoa */
-        tb_days[tb_days.length] = [1, 20];
-        tb_days[tb_days.length] = [19, 3];
+        tb_days[tb_days.length] = [0, 20];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
         tb_days[tb_days.length] = holyWeek(1);
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [9, 9];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [8, 9];
     } else if (kwargs['city'] == 15)  {  /* A Coruña */
-        tb_days[tb_days.length] = [16, 2];
-        tb_days[tb_days.length] = [19, 3];
+        tb_days[tb_days.length] = [1, 16];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [5, 17];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [8, 24];
+        tb_days[tb_days.length] = [4, 17];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [7, 24];
     } else if (kwargs['city'] == 2)  {  /* Albacete */
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [5, 31];
-        tb_days[tb_days.length] = [6, 3];
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [9, 8];
+        tb_days[tb_days.length] = [4, 31];
+        tb_days[tb_days.length] = [5, 3];
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [8, 8];
     } else if (kwargs['city'] == 3)  {  /* Alicante */
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(1);
         tb_days[tb_days.length] = holyWeek(11);
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [10, 9];
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [9, 9];
     } else if (kwargs['city'] == 4)  {  /* Almería */
-        tb_days[tb_days.length] = [3, 1];
+        tb_days[tb_days.length] = [2, 1];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [8, 16];
-        tb_days[tb_days.length] = addDays([8, 1], 22, 5);
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [7, 16];
+        tb_days[tb_days.length] = addDays([7, 1], 22, 5);
     } else if (kwargs['city'] == 1)  {  /* Araba/Álava */
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
         tb_days[tb_days.length] = holyWeek(1);
-        tb_days[tb_days.length] = [4, 28];
-        tb_days[tb_days.length] = [7, 25];
-        tb_days[tb_days.length] = [8, 5];
-        tb_days[tb_days.length] = [8, 15];
+        tb_days[tb_days.length] = [3, 28];
+        tb_days[tb_days.length] = [6, 25];
+        tb_days[tb_days.length] = [7, 5];
+        tb_days[tb_days.length] = [7, 15];
     } else if (kwargs['city'] == 33)  {  /* Asturias */
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [8, 16];
-        tb_days[tb_days.length] = [9, 8];
-        tb_days[tb_days.length] = [9, 21];
+        tb_days[tb_days.length] = [7, 16];
+        tb_days[tb_days.length] = [8, 8];
+        tb_days[tb_days.length] = [8, 21];
     } else if (kwargs['city'] == 6)  {  /* Badajoz */
-        tb_days[tb_days.length] = [2, 16];
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [1, 16];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [9, 8];
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [8, 8];
     } else if (kwargs['city'] == 8)  {  /* Barcelona */
         tb_days[tb_days.length] = holyWeek(1);
         tb_days[tb_days.length] = holyWeek(50);
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [9, 11];
-        tb_days[tb_days.length] = [9, 24];
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [8, 11];
+        tb_days[tb_days.length] = [8, 24];
     } else if (kwargs['city'] == 48)  {  /* Bizkaia */
         tb_days[tb_days.length] = holyWeek(-3);
         tb_days[tb_days.length] = holyWeek(1);
     } else if (kwargs['city'] == 9)  {  /* Burgos */
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [4, 23];
-        tb_days[tb_days.length] = [6, 29];
-        tb_days[tb_days.length] = [8, 15];
+        tb_days[tb_days.length] = [3, 23];
+        tb_days[tb_days.length] = [5, 29];
+        tb_days[tb_days.length] = [7, 15];
     } else if (kwargs['city'] == 39)  {  /* Cantabria */
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [6, 28];
-        tb_days[tb_days.length] = [9, 15];
+        tb_days[tb_days.length] = [5, 28];
+        tb_days[tb_days.length] = [8, 15];
     } else if (kwargs['city'] == 12)  {  /* Castellón */
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-28);
         tb_days[tb_days.length] = holyWeek(1);
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [6, 29];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [10, 9];
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [5, 29];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [9, 9];
     } else if (kwargs['city'] == 51)  {  /* Ceuta */
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [6, 13];
-        tb_days[tb_days.length] = [8, 5];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [9, 2];
+        tb_days[tb_days.length] = [5, 13];
+        tb_days[tb_days.length] = [7, 5];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [8, 2];
     } else if (kwargs['city'] == 13)  {  /* Ciudad Real */
         tb_days[tb_days.length] = holyWeek(-3);
         tb_days[tb_days.length] = holyWeek(50);
-        tb_days[tb_days.length] = [5, 31];
+        tb_days[tb_days.length] = [4, 31];
         tb_days[tb_days.length] = holyWeek(60);
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [8, 22];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [7, 22];
     } else if (kwargs['city'] == 16)  {  /* Cuenca */
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [5, 31];
+        tb_days[tb_days.length] = [4, 31];
         tb_days[tb_days.length] = holyWeek(60);
-        tb_days[tb_days.length] = [6, 1];
-        tb_days[tb_days.length] = [8, 15];
+        tb_days[tb_days.length] = [5, 1];
+        tb_days[tb_days.length] = [7, 15];
     } else if (kwargs['city'] == 10)  {  /* Cáceres */
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [4, 23];
-        tb_days[tb_days.length] = [5, 31];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [9, 9];
+        tb_days[tb_days.length] = [3, 23];
+        tb_days[tb_days.length] = [4, 31];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [8, 9];
     } else if (kwargs['city'] == 11)  {  /* Cádiz */
         tb_days[tb_days.length] = holyWeek(-49);
-        tb_days[tb_days.length] = [2, 28];
+        tb_days[tb_days.length] = [1, 28];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [9, 7];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [8, 7];
     } else if (kwargs['city'] == 14)  {  /* Córdoba */
-        tb_days[tb_days.length] = [2, 28];
+        tb_days[tb_days.length] = [1, 28];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [8, 16];
-        tb_days[tb_days.length] = [9, 8];
-        tb_days[tb_days.length] = [10, 24];
+        tb_days[tb_days.length] = [7, 16];
+        tb_days[tb_days.length] = [8, 8];
+        tb_days[tb_days.length] = [9, 24];
     } else if (kwargs['city'] == 17)  {  /* Girona */
         tb_days[tb_days.length] = holyWeek(1);
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [7, 25];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [9, 11];
-        tb_days[tb_days.length] = [10, 29];
-        tb_days[tb_days.length] = [12, 26];
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [6, 25];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [8, 11];
+        tb_days[tb_days.length] = [9, 29];
+        tb_days[tb_days.length] = [11, 26];
     } else if (kwargs['city'] == 18)  {  /* Granada */
-        tb_days[tb_days.length] = [1, 2];
-        tb_days[tb_days.length] = [3, 1];
+        tb_days[tb_days.length] = [0, 2];
+        tb_days[tb_days.length] = [2, 1];
         tb_days[tb_days.length] = holyWeek(-3);
         tb_days[tb_days.length] = holyWeek(60);
-        tb_days[tb_days.length] = [8, 15];
+        tb_days[tb_days.length] = [7, 15];
     } else if (kwargs['city'] == 19)  {  /* Guadalajara */
         tb_days[tb_days.length] = holyWeek(-3)  ;
-        tb_days[tb_days.length] = [5, 31];
+        tb_days[tb_days.length] = [4, 31];
         tb_days[tb_days.length] = holyWeek(60);
-        tb_days[tb_days.length] = [9, 8];
-        tb_days[tb_days.length] = addDays([9, 8], 4, 4);
+        tb_days[tb_days.length] = [8, 8];
+        tb_days[tb_days.length] = addDays([8, 8], 4, 4);
     } else if (kwargs['city'] == 21)  {  /* Huelva */
-        tb_days[tb_days.length] = [2, 28];
+        tb_days[tb_days.length] = [1, 28];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [8, 3];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [9, 8];
+        tb_days[tb_days.length] = [7, 3];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [8, 8];
     } else if (kwargs['city'] == 22)  {  /* Huesca */
-        tb_days[tb_days.length] = [1, 22];
+        tb_days[tb_days.length] = [0, 22];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [4, 23];
-        tb_days[tb_days.length] = [8, 10];
-        tb_days[tb_days.length] = [8, 15];
+        tb_days[tb_days.length] = [3, 23];
+        tb_days[tb_days.length] = [7, 10];
+        tb_days[tb_days.length] = [7, 15];
     } else if (kwargs['city'] == 7)  {  /* Illes Balears */
-        tb_days[tb_days.length] = [1, 20];
-        tb_days[tb_days.length] = [3, 1];
+        tb_days[tb_days.length] = [0, 20];
+        tb_days[tb_days.length] = [2, 1];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [6, 24];
+        tb_days[tb_days.length] = [5, 24];
     } else if (kwargs['city'] == 23)  {  /* Jaén */
-        tb_days[tb_days.length] = [3, 1];
+        tb_days[tb_days.length] = [2, 1];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [6, 11];
-        tb_days[tb_days.length] = [8, 15];
+        tb_days[tb_days.length] = [5, 11];
+        tb_days[tb_days.length] = [7, 15];
         tb_days[tb_days.length] = [25, 11];
     } else if (kwargs['city'] == 26)  {  /* La Rioja */
         tb_days[tb_days.length] = holyWeek(-3);
         tb_days[tb_days.length] = holyWeek(1);
-        tb_days[tb_days.length] = [6, 9];
+        tb_days[tb_days.length] = [5, 9];
     } else if (kwargs['city'] == 35)  {  /* Las Palmas */
         tb_days[tb_days.length] = holyWeek(-47);
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [8, 5];
-        tb_days[tb_days.length] = addDays([8, 5], 7, 0);
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [7, 5];
+        tb_days[tb_days.length] = addDays([7, 5], 7, 0);
         v1 = tb_days[tb_days.length - 1];
     } else if (kwargs['city'] == 24)  {  /* León */
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [4, 23];
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [8, 5];
-        tb_days[tb_days.length] = [10, 4];
+        tb_days[tb_days.length] = [3, 23];
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [7, 5];
+        tb_days[tb_days.length] = [9, 4];
 
-        if (addDays([8, 5], 6, 0)[1] > 15) {
-            tb_days[tb_days.length] = addDays([8, 5], 6, 0);
+        if (addDays([7, 5], 6, 0)[1] > 15) {
+            tb_days[tb_days.length] = addDays([7, 5], 6, 0);
             v1 = tb_days[tb_days.length - 1];
         } else {
-            tb_days[tb_days.length] = [8, 5];
+            tb_days[tb_days.length] = [7, 5];
         }
     } else if (kwargs['city'] == 25)  {  /* Lleida */
         tb_days[tb_days.length] = holyWeek(1);
-        tb_days[tb_days.length] = [5, 11];
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [9, 11];
-        tb_days[tb_days.length] = [9, 29];
+        tb_days[tb_days.length] = [4, 11];
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [8, 11];
+        tb_days[tb_days.length] = [8, 29];
     } else if (kwargs['city'] == 27)  {  /* Lugo */
         tb_days[tb_days.length] = holyWeek(-47);
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [5, 17];
-        tb_days[tb_days.length] = [10, 5];
+        tb_days[tb_days.length] = [4, 17];
+        tb_days[tb_days.length] = [9, 5];
     } else if (kwargs['city'] == 28)  {  /* Madrid */
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [5, 2];
-        tb_days[tb_days.length] = [5, 15];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [10, 5];
-        tb_days[tb_days.length] = [11, 9];
+        tb_days[tb_days.length] = [4, 2];
+        tb_days[tb_days.length] = [4, 15];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [9, 5];
+        tb_days[tb_days.length] = [10, 9];
     } else if (kwargs['city'] == 52)  {  /* Melilla */
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [9, 8];
-        tb_days[tb_days.length] = [9, 17];
+        tb_days[tb_days.length] = [8, 8];
+        tb_days[tb_days.length] = [8, 17];
     } else if (kwargs['city'] == 30)  {  /* Murcia */
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
         tb_days[tb_days.length] = holyWeek(2);
-        tb_days[tb_days.length] = [6, 9];
-        tb_days[tb_days.length] = [8, 15];
-        //tb_days[tb_days.length] = addDays([9, 1], 13, 1);
+        tb_days[tb_days.length] = [5, 9];
+        tb_days[tb_days.length] = [7, 15];
+        //tb_days[tb_days.length] = addDays([8, 1], 13, 1);
     } else if (kwargs['city'] == 29)  {  /* Málaga */
-        tb_days[tb_days.length] = [2, 28];
+        tb_days[tb_days.length] = [1, 28];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [8, 19];
-        tb_days[tb_days.length] = [9, 8];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [7, 19];
+        tb_days[tb_days.length] = [8, 8];
     } else if (kwargs['city'] == 31)  {  /* Navarra */
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
         tb_days[tb_days.length] = holyWeek(1);
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [11, 9];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [10, 9];
     } else if (kwargs['city'] == 32)  {  /* Ourense */
         tb_days[tb_days.length] = holyWeek(-47);
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [5, 17];
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [7, 25];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [11, 11];
+        tb_days[tb_days.length] = [4, 17];
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [6, 25];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [10, 11];
     } else if (kwargs['city'] == 34)  {  /* Palencia */
-        tb_days[tb_days.length] = [2, 2];
+        tb_days[tb_days.length] = [1, 2];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [4, 23];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [9, 2];
-        tb_days[tb_days.length] = [11, 11];
+        tb_days[tb_days.length] = [3, 23];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [8, 2];
+        tb_days[tb_days.length] = [10, 11];
     } else if (kwargs['city'] == 36)  {  /* Pontevedra */
         tb_days[tb_days.length] = holyWeek(-46);
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [5, 17];
-        tb_days[tb_days.length] = [7, 11];
-        tb_days[tb_days.length] = [7, 25];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [11, 11];
+        tb_days[tb_days.length] = [4, 17];
+        tb_days[tb_days.length] = [6, 11];
+        tb_days[tb_days.length] = [6, 25];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [10, 11];
     } else if (kwargs['city'] == 37)  {  /* Salamanca */
         tb_days[tb_days.length] = holyWeek(-3);
         tb_days[tb_days.length] = holyWeek(8);
-        tb_days[tb_days.length] = [4, 23];
-        tb_days[tb_days.length] = [6, 12];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [9, 8];
-        tb_days[tb_days.length] = [11, 11];
+        tb_days[tb_days.length] = [3, 23];
+        tb_days[tb_days.length] = [5, 12];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [8, 8];
+        tb_days[tb_days.length] = [10, 11];
     } else if (kwargs['city'] == 38)  {  /* Santa Cruz de Tenerife */
-        tb_days[tb_days.length] = [2, 2];
+        tb_days[tb_days.length] = [1, 2];
         tb_days[tb_days.length] = holyWeek(-47);
         tb_days[tb_days.length] = holyWeek(-46);
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [5, 30];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [7, 7];
-        tb_days[tb_days.length] = [11, 11];
+        tb_days[tb_days.length] = [4, 30];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [6, 7];
+        tb_days[tb_days.length] = [10, 11];
     } else if (kwargs['city'] == 40)  {  /* Segovia */
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [6, 29];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [10, 25];
+        tb_days[tb_days.length] = [5, 29];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [9, 25];
     } else if (kwargs['city'] == 41)  {  /* Sevilla */
-        tb_days[tb_days.length] = [2, 28];
+        tb_days[tb_days.length] = [1, 28];
         tb_days[tb_days.length] = holyWeek(-3);
         tb_days[tb_days.length] = holyWeek(17);
         tb_days[tb_days.length] = holyWeek(60);
-        tb_days[tb_days.length] = [8, 15];
+        tb_days[tb_days.length] = [7, 15];
     } else if (kwargs['city'] == 42)  {  /* Soria */
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [4, 23];
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [10, 2];
+        tb_days[tb_days.length] = [3, 23];
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [9, 2];
     } else if (kwargs['city'] == 43)  {  /* Tarragona */
         tb_days[tb_days.length] =
         tb_days[tb_days.length] = holyWeek(1);
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [8, 19];
-        tb_days[tb_days.length] = [9, 11];
-        tb_days[tb_days.length] = [9, 23];
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [7, 19];
+        tb_days[tb_days.length] = [8, 11];
+        tb_days[tb_days.length] = [8, 23];
     } else if (kwargs['city'] == 44)  {  /* Teruel */
         tb_days[tb_days.length] = holyWeek(-3);
         tb_days[tb_days.length] = holyWeek(2);
-        tb_days[tb_days.length] = [4, 23];
-        tb_days[tb_days.length] = addDays([7, 1], 7, 7);
+        tb_days[tb_days.length] = [3, 23];
+        tb_days[tb_days.length] = addDays([6, 1], 7, 7);
         v1 = tb_days[tb_days.length - 1];
-        tb_days[tb_days.length] = [8, 15];
+        tb_days[tb_days.length] = [7, 15];
     } else if (kwargs['city'] == 45)  {  /* Toledo */
-        tb_days[tb_days.length] = [1, 23];
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [0, 23];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(-3);
         tb_days[tb_days.length] = holyWeek(1);
         tb_days[tb_days.length] = holyWeek(60);
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [12, 9];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [11, 9];
     } else if (kwargs['city'] == 46)  {  /* Valencia */
-        tb_days[tb_days.length] = [1, 22];
-        tb_days[tb_days.length] = [3, 19];
+        tb_days[tb_days.length] = [0, 22];
+        tb_days[tb_days.length] = [2, 19];
         tb_days[tb_days.length] = holyWeek(1);
         tb_days[tb_days.length] = holyWeek(8);
-        tb_days[tb_days.length] = [6, 24];
-        tb_days[tb_days.length] = [10, 9];
-        tb_days[tb_days.length] = [12, 9];
+        tb_days[tb_days.length] = [5, 24];
+        tb_days[tb_days.length] = [9, 9];
+        tb_days[tb_days.length] = [11, 9];
     } else if (kwargs['city'] == 47)  {  /* Valladolid */
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [4, 23];
-        tb_days[tb_days.length] = [5, 13];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [9, 8];
-        tb_days[tb_days.length] = [12, 9];
+        tb_days[tb_days.length] = [3, 23];
+        tb_days[tb_days.length] = [4, 13];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [8, 8];
+        tb_days[tb_days.length] = [11, 9];
     } else if (kwargs['city'] == 49)  {  /* Zamora */
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [4, 23];
+        tb_days[tb_days.length] = [3, 23];
         tb_days[tb_days.length] = holyWeek(49, 7);
         v1 = tb_days[tb_days.length - 1];
-        tb_days[tb_days.length] = [6, 29];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [12, 9];
+        tb_days[tb_days.length] = [5, 29];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [11, 9];
     } else if (kwargs['city'] == 50)  {  /* Zaragoza */
-        tb_days[tb_days.length] = [1, 29];
-        tb_days[tb_days.length] = [5, 5];
+        tb_days[tb_days.length] = [0, 29];
+        tb_days[tb_days.length] = [4, 5];
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [4, 23];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [12, 9];
+        tb_days[tb_days.length] = [3, 23];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [11, 9];
     } else if (kwargs['city'] == 5)  {  /* Ávila */
         tb_days[tb_days.length] = holyWeek(-3);
-        tb_days[tb_days.length] = [4, 23];
-        tb_days[tb_days.length] = [5, 2];
-        tb_days[tb_days.length] = [8, 15];
-        tb_days[tb_days.length] = [10, 15];
-        tb_days[tb_days.length] = [12, 9];
+        tb_days[tb_days.length] = [3, 23];
+        tb_days[tb_days.length] = [4, 2];
+        tb_days[tb_days.length] = [7, 15];
+        tb_days[tb_days.length] = [9, 15];
+        tb_days[tb_days.length] = [11, 9];
     }
 
     var out = [];
@@ -562,10 +559,10 @@ function partyDays(month) {
 
     $.each(tb_days, function (i, item) {
         var aux = item;
-        var weekday = new Date(kwargs['year'], item[0], item[1]);
+        var weekDay = [6, 1, 2, 3, 4, 5, 6][(new Date(kwargs['year'], item[0], item[1])).getDay()];
+        
 
-        if (weekday.getDay() == 0) {
-
+        if (weekDay == 7) {
             if (((item[0] == v0[0]) && (item[1] == v0[1]))
                     || ((item[0] == v1[0]) && (item[1] == v1[1]))) {
                 aux = item;
@@ -579,9 +576,8 @@ function partyDays(month) {
         }
     });
 
-    return out;
+    return out.sort();
 }
-
 // Calcular el Domingo de resurrecion, Semana Santa y sumarle dias
 function holyWeek(days = 0, weekday = null) {
     var k = parseInt(kwargs['year'] / 100);
@@ -594,7 +590,7 @@ function holyWeek(days = 0, weekday = null) {
         sun = new Date(kwargs['year'], 3, d + e + 22);
     }
 
-    return addDays([sun.getMonth() + 1, sun.getDate()], days, weekday);
+    return addDays([sun.getMonth(), sun.getDate()], days, weekday);
 }
 
 // Calcular dia a una fecha dada
@@ -610,38 +606,43 @@ function addDays(mmdd = [], days = 0, weekday = null) {
             }
         }
     }
-
+    
     return [out.getMonth(), out.getDate()];
 }
 
 // Tamaño fuente a la anchura dada en la function
-function fontWH(msg = '', maxWidth = 0) {
+function fontWH(msg = '', maxWidth = 0, typeFont = '##px') {
     var auxCanvas = document.createElement('fontwidth');
     var auxContext = canvas.getContext('2d');
     auxCanvas.width = maxWidth;
     
     var fontW = 0;
-    auxContext.font = 'normal bold ' + fontW + 'px Courier New monospace';
+    //auxContext.font = 'normal bold ' + fontW + 'px Courier New monospace';
+    var auxType = typeFont.replace('##', fontW);
+    auxContext.font = auxType;
     
     // Incrementar fuente hasta que sea igual a la anchura dada
     while (auxContext.measureText(msg).width < maxWidth) {
-        auxContext.font = 'normal bold ' + (++fontW) + 'px Courier New monospace';
+        auxType = typeFont.replace('##', ++fontW);
+        auxContext.font = auxType;
     }
     
     // Reduce fuente hasta que sea igual a la anchura dada
     if (auxContext.measureText(msg).width > maxWidth) {
-        auxContext.font = 'normal bold ' + (--fontW) + 'px Courier New monospace';
+        auxType = typeFont.replace('##', --fontW);
+        auxContext.font = auxType;
     }
 
     auxCanvas.remove();
 
-    return [fontW, auxContext.measureText(msg).height];
+    return [fontW, auxContext.measureText(msg).height, auxContext.font];
 }
 
 // Dibujar el cnv
-function draw(month, cnv) {
+function draw(cnv) {
     cnv.width = 595;
     cnv.height = 842;
+    var month = kwargs['dmonth'];
 
     var ctx = cnv.getContext('2d');
     
@@ -657,7 +658,7 @@ function draw(month, cnv) {
     if (month == 0) {
         msg = ' Calendario ' + kwargs['year'] + ' ';
 
-        ctx.font = 'normal bold ' + fontWH(msg, w * (1 - 0.20))[0] + 'px Courier New monospace';
+        ctx.font = fontWH(msg, w * (1 - 0.20), 'normal bold ##px Courier New monospace')[2];
         ctx.fillStyle = kwargs[month]['colors'][4];
 
         if (kwargs['position'] == 'u') {
@@ -670,23 +671,22 @@ function draw(month, cnv) {
     } else {
         var x = 0;
         var y = 0;
+        month = month - 1;
 
         var tb_msg = [];
         tb_msg[y] = ['  ', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'];
         
-        var infoFont = fontWH('#'.repeat((tb_msg[0].toString()).length), cnv.width * (1 - 0.20))
+        var infoFont = fontWH('#'.repeat((tb_msg[0].toString()).length), cnv.width * (1 - 0.20), 'normal bold ##px Courier New monospace')
 
-        ctx.font = 'normal bold ' + infoFont[0] + 'px Courier New monospace';
+        ctx.font = infoFont[2];
 
         ant_NumberWeek = new Date(kwargs['year'], month, 1).iso8601Week();
         tb_msg[++y] = [];
         tb_msg[y][x] = ('0' + parseInt(ant_NumberWeek).toString()).slice(-2);
 
-        var endX = [7, 1, 2, 3, 4, 5, 6][(new Date(kwargs['year'], month, 1)).getDay()];
-        
-        console.log(kwargs['year'], month, 1, endX);
+        var weekDay = [7, 1, 2, 3, 4, 5, 6][(new Date(kwargs['year'], month, 1)).getDay()];
 
-        for (x = 1; x < endX; x++) {
+        for (x = 1; x < weekDay; x++) {
             tb_msg[y][x] = '  ';
         }
         
@@ -706,7 +706,6 @@ function draw(month, cnv) {
 
         w = cnv.width;
         h = cnv.height;
-        
 
         var party = partyDays(month);
         var z = 0;
@@ -715,7 +714,7 @@ function draw(month, cnv) {
             for (var x = 0; x < (tb_msg[y]).length; x++) {
                 // coordenadas
                 var aux_x = (x * (w / (tb_msg[0]).length)) + 10;
-                //var aux_y = 
+                var aux_y = ((y + 1) * (h / 15)) + (h / 2);
                 
                 // Fase lunar
                 if (x != 0 && y != 0 && tb_msg[y][x] != '  ') {
@@ -723,36 +722,36 @@ function draw(month, cnv) {
 
                     if (moon == 1 || moon == 6) {
                         ctx.beginPath();
-                        ctx.arc((x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2), 5, 0 * Math.PI, 2 * Math.PI);
+                        ctx.arc(aux_x, aux_y, 5, 0 * Math.PI, 2 * Math.PI);
                         ctx.fillStyle = kwargs[month]['colors'][3];
                         ctx.fill();
 
                         ctx.beginPath();
-                        ctx.arc(((x * (w / 8)) + 10) + (moon == 1?-1:1) * 1.5, ((y + 1) * (h / 15)) + (h / 2), 3.5, 0 * Math.PI, 2 * Math.PI);
+                        ctx.arc(aux_x + (moon == 1?-1:1) * 1.5, aux_y, 3.5, 0 * Math.PI, 2 * Math.PI);
                         ctx.fillStyle = kwargs[month]['colors'][0];
                         ctx.fill();
                     }
                     if (moon == 2 || moon == 7) {
                         ctx.beginPath();
-                        ctx.arc((x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2), 5, 0.5 * Math.PI, 1.5 * Math.PI, (moon == 2));
+                        ctx.arc(aux_x, aux_y, 5, 0.5 * Math.PI, 1.5 * Math.PI, (moon == 2));
                         ctx.fillStyle = kwargs[month]['colors'][3];
                         ctx.fill();
                     }
                     if (moon == 3) {
                         ctx.beginPath();
-                        ctx.arc((x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2), 5, 1.0 * Math.PI, 0.5 * Math.PI);
+                        ctx.arc(aux_x, aux_y, 5, 1.0 * Math.PI, 0.5 * Math.PI);
                         ctx.fillStyle = kwargs[month]['colors'][3];
                         ctx.fill();
                     }
                     if (moon == 4) {
                         ctx.beginPath();
-                        ctx.arc((x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2), 5, 0 * Math.PI, 2 * Math.PI);
+                        ctx.arc(aux_x, aux_y, 5, 0 * Math.PI, 2 * Math.PI);
                         ctx.fillStyle = kwargs[month]['colors'][3];
                         ctx.fill();
                     }
                     if (moon == 5) {
                         ctx.beginPath();
-                        ctx.arc((x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2), 5, 0.5 * Math.PI, 1.0 * Math.PI);
+                        ctx.arc(aux_x, aux_y, 5, 0.5 * Math.PI, 1.0 * Math.PI);
                         ctx.fillStyle = kwargs[month]['colors'][3];
                         ctx.fill();
                     }
@@ -769,18 +768,21 @@ function draw(month, cnv) {
                     }
                 }
 
-                ctx.fillText(tb_msg[y][x], aux_x, ((y + 1) * (h / 15)) + (h / 2));
+                ctx.fillText(tb_msg[y][x], aux_x, aux_y);
             }
         }
-
-        ctx.font = 'italic bold ' + infoFont[0] + 'px Courier New monospace';
+        // Pie del mes
+        ctx.font = infoFont[2].replace('bold', 'italic bold');
         ctx.fillStyle = kwargs[month]['colors'][2];
 
-        name_month = new Intl.DateTimeFormat(userLanguage, { month: 'long'}).format(new Date(kwargs['year'], month - 1));
-        msg = name_month + (' ').repeat(10 - name_month.length);
+        name_month = new Intl.DateTimeFormat(userLanguage, { month: 'long'}).format(new Date(kwargs['year'], month));
+        msg = name_month.capitalize() + (' ').repeat(10 - name_month.length);
 
-        x = 4.5
-        y = 6
-        ctx.fillText(msg.capitalize(), (x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2));
+        x = 3;
+        y = 6;
+        ctx.fillText(msg, (x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2));
+        
+        x = 6;
+        ctx.fillText(kwargs['year'], (x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2));
     }
 }
