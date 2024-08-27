@@ -41,6 +41,11 @@ input, select, button {
     width: 80%;
 }
 
+input[type=color] {
+    margin-top:0.5vmax;
+    height: 2vmax;
+}
+
 /* canvas prev */
 canvas {
     border: solid #000000 0.1vmax;
@@ -48,4 +53,3 @@ canvas {
 
     width: 35%;
 }
-

@@ -92,9 +92,11 @@ function main() {
     $('[name=year]').change(function(e) {update()});
     $('[name=dmonth]').change(function(e) {update()});
     $('[name=city]').change(function(e) {update()});
-    
+
     $('#image').click(function(e) {upload()});
     $('#dimage').click(function(e) {download()});
+
+    $('[name=background]').change(function(e) {update()});
     
     // Posicion del texto de la portada
     $('[name=position]').change(function(e) {update()});
@@ -104,16 +106,17 @@ function main() {
 
 // Actualizar valores de la clase
 function update() {
+    if ($('[name=year]').val() > 9999) {
+        $('[name=year]').val(9999);
+    }
+
     for (var i = 0; i <= 12; i++) {
         if (typeof kwargs[i] == 'undefined') {
             kwargs[i] = {'colors': [], 'img': null};
-
-            kwargs[i]['colors'][0] =  '#FFFFFF';
-            kwargs[i]['colors'][1] =  '#02BD62';
-            kwargs[i]['colors'][2] =  '#242DD5';
-            kwargs[i]['colors'][3] =  '#D52D24';
-            kwargs[i]['colors'][4] =  '#000000';
         }
+
+        kwargs[i]['colors'][0] = $('[name=background]').val();
+        kwargs[i]['colors'][1] = InversoColor(kwargs[i]['colors'][0]);
     }
 
     kwargs['year']     = $('[name=year]').val();
@@ -123,6 +126,47 @@ function update() {
     
     var pcanvas = document.getElementById('prev');
     draw(pcanvas);
+}
+
+// Sumar o restar colores
+function addColor(hex, value) {
+    var outR = hexToRgb(hex)['r'];
+    var outG = hexToRgb(hex)['g'];
+    var outB = hexToRgb(hex)['b'];
+
+    if (((value + hexToRgb(hex)['r']) > 255) || ((value + hexToRgb(hex)['r']) < 0)) {
+        var aux = ((value + hexToRgb(hex)['r']) % 255);
+        if (aux < 0) {
+            outR = 255 + aux;
+        }
+    } else {
+        outR = value + hexToRgb(hex)['r'];
+    }
+
+    if (((value + hexToRgb(hex)['g']) > 255) || ((value + hexToRgb(hex)['g']) < 0)) {
+        var aux = ((value + hexToRgb(hex)['g']) % 255);
+        if (aux < 0) {
+            outG = 255 + aux;
+        }
+    } else {
+        outG = value + hexToRgb(hex)['g'];
+    }
+
+    if (((value + hexToRgb(hex)['b']) > 255) || ((value + hexToRgb(hex)['b']) < 0)) {
+        var aux = ((value + hexToRgb(hex)['b']) % 255);
+        if (aux < 0) {
+            outB = 255 + aux;
+        }
+    } else {
+        outB = value + hexToRgb(hex)['b'];
+    }
+
+    return rgbToHex(outR, outG, outB);
+}
+
+// Invertir un color dado
+function InversoColor(hex) {
+    return rgbToHex((255 - hexToRgb(hex)['r']), (255 - hexToRgb(hex)['g']), (255 - hexToRgb(hex)['b']));
 }
 
 // Asignar el valor a los colores
@@ -145,11 +189,10 @@ function upload() {
         var img = new Image();
         img.onload = function() {
             // Extraer colores
-            var colors = (new ColorThief()).getPalette(img, 5);
+            var colors = (new ColorThief()).getPalette(img, 2);
 
-            for (var j = 0; j < colors.length; j++) {
-                kwargs[i]['colors'][j] = rgbToHex(colors[j][0], colors[j][1], colors[j][2]);
-            }
+            kwargs[i]['colors'][0] = rgbToHex(colors[0][0], colors[0][1], colors[0][2]);
+            kwargs[i]['colors'][1] = InversoColor(kwargs[i]['colors'][0]);
         };
         
         kwargs[i]['img'] = img;
@@ -420,7 +463,7 @@ function partyDays(month) {
         tb_days[tb_days.length] = holyWeek(2);
         tb_days[tb_days.length] = [5, 9];
         tb_days[tb_days.length] = [7, 15];
-        //tb_days[tb_days.length] = addDays([8, 1], 13, 1);
+        tb_days[tb_days.length] = addDays([8, 1], 13, 1);
     } else if (kwargs['city'] == 29)  {  /* Málaga */
         tb_days[tb_days.length] = [1, 28];
         tb_days[tb_days.length] = holyWeek(-3);
@@ -617,7 +660,6 @@ function fontWH(msg = '', maxWidth = 0, typeFont = '##px') {
     auxCanvas.width = maxWidth;
     
     var fontW = 0;
-    //auxContext.font = 'normal bold ' + fontW + 'px Courier New monospace';
     var auxType = typeFont.replace('##', fontW);
     auxContext.font = auxType;
     
@@ -635,7 +677,7 @@ function fontWH(msg = '', maxWidth = 0, typeFont = '##px') {
 
     auxCanvas.remove();
 
-    return [fontW, auxContext.measureText(msg).height, auxContext.font];
+    return [fontW, auxContext.measureText(msg).actualBoundingBoxAscent, auxContext.font];
 }
 
 // Dibujar el cnv
@@ -654,19 +696,23 @@ function draw(cnv) {
     // Dibujar
     var w = cnv.width;
     var h = cnv.height;
+    
+    var typeFont = '##px \'Courier New monospace\'';
 
     if (month == 0) {
-        msg = ' Calendario ' + kwargs['year'] + ' ';
+        msg = 'Calendario ' + kwargs['year'];
+        
+        var infoFont = fontWH(msg, w * (1 - 0.20), typeFont);
+        ctx.font = infoFont[2];
 
-        ctx.font = fontWH(msg, w * (1 - 0.20), 'normal bold ##px Courier New monospace')[2];
-        ctx.fillStyle = kwargs[month]['colors'][4];
+        ctx.fillStyle = kwargs[month]['colors'][1];
 
         if (kwargs['position'] == 'u') {
-            ctx.fillText(msg, 0, (h / 12));
+            ctx.fillText(msg, (w - w * (1 - 0.20)) / 2, (h / 12));
         } else if (kwargs['position'] == 'm') {
-            ctx.fillText(msg, 0, (h / 2) + (h / 12));
+            ctx.fillText(msg, (w - w * (1 - 0.20)) / 2, (h / 2) + infoFont[1]);
         } else if (kwargs['position'] == 'b') {
-            ctx.fillText(msg, 0, h - (h / 12));
+            ctx.fillText(msg, (w - w * (1 - 0.20)) / 2, h - infoFont[1]);
         }
     } else {
         var x = 0;
@@ -676,8 +722,7 @@ function draw(cnv) {
         var tb_msg = [];
         tb_msg[y] = ['  ', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'];
         
-        var infoFont = fontWH('#'.repeat((tb_msg[0].toString()).length), cnv.width * (1 - 0.20), 'normal bold ##px Courier New monospace')
-
+        var infoFont = fontWH('#'.repeat((tb_msg[0].toString()).length), cnv.width * (1 - 0.20), typeFont);
         ctx.font = infoFont[2];
 
         ant_NumberWeek = new Date(kwargs['year'], month, 1).iso8601Week();
@@ -690,7 +735,7 @@ function draw(cnv) {
             tb_msg[y][x] = '  ';
         }
         
-        for (var j = 1; j <= new Date(kwargs['year'], month, 0).getDate(); j++) {
+        for (var j = 1; j <= new Date(kwargs['year'], kwargs['dmonth'], 0).getDate(); j++) {
             act_NumberWeek = new Date(kwargs['year'], month, j).iso8601Week();
 
             if (act_NumberWeek != ant_NumberWeek) {
@@ -709,21 +754,61 @@ function draw(cnv) {
 
         var party = partyDays(month);
         var z = 0;
+        
+        ctx.beginPath();
+        ctx.moveTo(infoFont[0] + 20, (h / 2));
+        ctx.lineTo(infoFont[0] + 20, h);
+        ctx.strokeStyle = kwargs[month]['colors'][1];
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(0, (h / 2) + (2 * infoFont[1]) + 20);
+        ctx.lineTo(w, (h / 2) + (2 * infoFont[1]) + 20);
+        ctx.strokeStyle = kwargs[month]['colors'][1];
+        ctx.stroke();
 
         for (var y = 0; y < tb_msg.length; y++) {
             for (var x = 0; x < (tb_msg[y]).length; x++) {
                 // coordenadas
                 var aux_x = (x * (w / (tb_msg[0]).length)) + 10;
                 var aux_y = ((y + 1) * (h / 15)) + (h / 2);
-                
                 // Fase lunar
                 if (x != 0 && y != 0 && tb_msg[y][x] != '  ') {
                     var moon = (new Date(kwargs['year'], month, tb_msg[y][x])).moonfase()[0];
-
+                    
+                    // insertar svg de 
+                    // https://fonts.google.com/icons?icon.query=moon&icon.size=16&icon.color=%235f6368&icon.platform=web&icon.style=Outlined
+                    
+                    switch(moon) {
+                        case 1:
+   
+                            break;
+                        case 2:
+                            
+                            break;
+                        case 3:
+                            
+                            break;
+                        case 4:
+                            
+                            break;
+                        case 5:
+                            
+                            break;
+                        case 6:
+                            
+                            break;
+                        case 7:
+                            
+                            break;
+                    }
+                    
+                    
+/*
                     if (moon == 1 || moon == 6) {
                         ctx.beginPath();
                         ctx.arc(aux_x, aux_y, 5, 0 * Math.PI, 2 * Math.PI);
-                        ctx.fillStyle = kwargs[month]['colors'][3];
+                        ctx.fillStyle = kwargs[month]['colors'][1];
                         ctx.fill();
 
                         ctx.beginPath();
@@ -734,37 +819,42 @@ function draw(cnv) {
                     if (moon == 2 || moon == 7) {
                         ctx.beginPath();
                         ctx.arc(aux_x, aux_y, 5, 0.5 * Math.PI, 1.5 * Math.PI, (moon == 2));
-                        ctx.fillStyle = kwargs[month]['colors'][3];
+                        ctx.fillStyle = kwargs[month]['colors'][1];
                         ctx.fill();
                     }
                     if (moon == 3) {
                         ctx.beginPath();
                         ctx.arc(aux_x, aux_y, 5, 1.0 * Math.PI, 0.5 * Math.PI);
-                        ctx.fillStyle = kwargs[month]['colors'][3];
+                        ctx.fillStyle = kwargs[month]['colors'][1];
                         ctx.fill();
                     }
                     if (moon == 4) {
                         ctx.beginPath();
                         ctx.arc(aux_x, aux_y, 5, 0 * Math.PI, 2 * Math.PI);
-                        ctx.fillStyle = kwargs[month]['colors'][3];
+                        ctx.fillStyle = kwargs[month]['colors'][1];
                         ctx.fill();
                     }
                     if (moon == 5) {
                         ctx.beginPath();
                         ctx.arc(aux_x, aux_y, 5, 0.5 * Math.PI, 1.0 * Math.PI);
-                        ctx.fillStyle = kwargs[month]['colors'][3];
+                        ctx.fillStyle = kwargs[month]['colors'][1];
                         ctx.fill();
                     }
+*/
                 }
-
-                ctx.fillStyle = kwargs[month]['colors'][4];
+                ctx.font = infoFont[2];
+                ctx.fillStyle = kwargs[month]['colors'][1];
 
                 if (x == 0 || y == 0) {
-                    ctx.fillStyle = kwargs[month]['colors'][2];
+                    ctx.font = 'italic ' + infoFont[2];
                 } else {
                     if (party[z] == tb_msg[y][x]) {
                         z++;
-                        ctx.fillStyle = kwargs[month]['colors'][1];
+                        ctx.beginPath();
+                        ctx.rect(aux_x - 5, aux_y + 5, 1.3 * infoFont[0], -1.5 * infoFont[1]);
+                        ctx.strokeStyle = kwargs[month]['colors'][1];
+                        ctx.stroke();
+                        ctx.font = 'bold ' + infoFont[2];
                     }
                 }
 
@@ -772,8 +862,8 @@ function draw(cnv) {
             }
         }
         // Pie del mes
-        ctx.font = infoFont[2].replace('bold', 'italic bold');
-        ctx.fillStyle = kwargs[month]['colors'][2];
+        ctx.font = 'italic ' + infoFont[2];
+        ctx.fillStyle = kwargs[month]['colors'][1];
 
         name_month = new Intl.DateTimeFormat(userLanguage, { month: 'long'}).format(new Date(kwargs['year'], month));
         msg = name_month.capitalize() + (' ').repeat(10 - name_month.length);

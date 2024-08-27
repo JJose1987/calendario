@@ -9,7 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="date" content="2021-01-01" scheme="YYYY-MM-DD">
         <meta name="identifier" content="" scheme="ISBN">
-        <!--<meta http-equiv="refresh" content="30">-->
+        <!--<meta http-equiv="refresh" content="30">-->        
         <link rel="shortcut icon" href="" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="styles.css" />
@@ -193,7 +193,7 @@
     <body>
         <div class="table">
             <div>
-                <div><input type="number" name="year" pattern="\d*" min="0" value="0" /></div>
+                <div><input type="number" name="year" pattern="\d*" min="0" max="9999" value="0" /></div>
                 <div><select name="city"></select></div>
                 <div><select name="dmonth"></select></div>
                 <div><button class="btn fa fa-file-image-o" id="image"></button></div>
@@ -211,6 +211,13 @@
                         <option value="m">Medio</option>
                         <option value="b">Abajo</option>
                     </select>
+
+                    <input type="color" name="background" value="#ffffff" />
+                    
+                    <!-- https://upload.wikimedia.org/wikipedia/commons/d/db/HLSColorSpace.png?20100119214645 
+                        pentagrama sobre el y sacar los clores por el color del fondo y luego poner abajo los codigos de colores que represata 
+                        y darte la opcion de modificar los collores
+                    -->
                 </div>
             </div>
         </div>
