@@ -126,6 +126,8 @@ function main() {
 
 // Actualizar valores de la clase
 function update() {
+    $('[class=position]').css({'display': ($('[name=dmonth]').val() == 0?'':'none')});
+
     if ($('[name=year]').val() > 9999) {
         $('[name=year]').val(9999);
     }
@@ -572,33 +574,13 @@ function partyDays() {
 }
 // Calcular el Domingo de resurrecion, Semana Santa y sumarle dias
 function holyWeek(days = 0, weekday = null) {
-    var k = parseInt(kwargs['year'] / 100);
-    var q = parseInt(k / 4);
-    var d = ((19 * (kwargs['year'] % 19)) + ((15 - (parseInt((13 + (8 * k)) / 25)) + k - q) % 30)) % 30;
-    var e = ((2 * (kwargs['year'] % 4)) + (4 * (kwargs['year'] % 7)) + (6 * d) + ((4 + k - q) % 7)) % 7;
-
-    var sun = new Date(kwargs['year'], 3, d + e - 9);
-    if ((d + e) < 10) {
-        sun = new Date(kwargs['year'], 2, d + e + 22);
-    }
-    
-    return addDays([sun.getMonth(), sun.getDate()], days, weekday);
+    var out = (new Date(kwargs['year'], 1, 1)).holyWeek();
+    return addDays([out.getMonth(), out.getDate()], days, weekday);
 }
 
 // Calcular dia a una fecha dada
 function addDays(mmdd = [], days = 0, weekday = null) {
-    var out = new Date(kwargs['year'], mmdd[0], mmdd[1] + days);
-
-    if (weekday != null) {
-        var i = [7, 1, 2, 3, 4, 5, 6][out.getDay()];
-        while (i != weekday) {
-            out = new Date(out.getFullYear(), out.getMonth(), out.getDate() + 1);
-            if (i++ > 6) {
-                i = 0;
-            }
-        }
-    }
-
+    var out = (new Date(kwargs['year'], mmdd[0], mmdd[1])).addDays(days, weekday);
     return [out.getMonth(), out.getDate()];
 }
 

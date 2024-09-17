@@ -83,7 +83,7 @@
                 }
             }
 
-            // Obtener el numero de la semana
+            // Obtener el numero de la semana del año indicado
             Date.prototype.iso8601Week = function () {
                 // Create a copy of the current date, we don't want to mutate the original
                 const date = new Date(this.getTime());
@@ -101,6 +101,7 @@
                 const days = Math.round((thursday - jan1st) / 86400000); // 1 day = 86400000 ms
                 return Math.floor(days / 7) + 1;
             }
+
             // Convetir la fecha gregoriana en juliana
             Date.prototype.julian = function () {
                 const date = new Date(this.getTime());
@@ -157,6 +158,50 @@
 
                 return [0, 'New'];
             }
+            
+            // Sumar/Restar dias a la fecha indicada
+            Date.prototype.addDays = function (days = 0, weekday = null) {
+                const date = new Date(this.getTime());
+
+                var y = date.getFullYear();
+                var M = date.getMonth();
+                var d = date.getDate();
+
+                var out = new Date(y, M, d + days);
+                
+                if (weekday != null) {
+                    var i = [7, 1, 2, 3, 4, 5, 6][out.getDay()];
+                    var j = 1;
+
+                    while (i != weekday) {
+                        out = new Date(y, M, d + j++);
+                        if (++i > 7) {
+                            i = 1;
+                        }
+                    }
+                }
+
+                return out;
+            }
+
+            // Calcular el Domingo de resurreccion de un año indicado
+            Date.prototype.holyWeek = function () {
+                const date = new Date(this.getTime());
+
+                var y = date.getFullYear();
+                
+                var k = parseInt(y / 100);
+                var q = parseInt(k / 4);
+                var d = ((19 * (y % 19)) + ((15 - (parseInt((13 + (8 * k)) / 25)) + k - q) % 30)) % 30;
+                var e = ((2 * (y % 4)) + (4 * (y % 7)) + (6 * d) + ((4 + k - q) % 7)) % 7;
+
+                var out = new Date(y, 3, d + e - 9);
+                if ((d + e) < 10) {
+                    out = new Date(y, 2, d + e + 22);
+                }
+
+                return out;
+            }
 
             // Fecha del sistema
             var now = new Date().toISOString();
@@ -180,7 +225,6 @@
 
             // Enviar Whatsapp
             function sendWhatsapp(value) {
-                console.log(value);
                 if (isPhone) {
                     location.href = 'whatsapp://send?text=' + ((value).replaceAll(' ', '%20')).replaceAll('\n', '%0A');
                 }
@@ -195,33 +239,22 @@
 
     </head>
     <body>
-        <div class="table">
-            <div>
-                <div>Ciudad<br /><select name="city"></select></div>
-                <div>Año<br /><input type="number" name="year" pattern="\d*" min="0" max="9999" value="0" /></div>
-                <div>Mes<br /><select name="dmonth"></select></div>
-                <div class="material-symbols-outlined">
-                    <span id="image" >add_a_photo</span>
-                    <input type="file" name="uimage" accept="image/*">
-                    <span id="dimage">download</span>
-                </div>
-            </div>
-        </div>
-        <div class="table">
-            <div>
-                <div class="c3 btnone" >
-                    <canvas id="prev" width="595" height="842"></canvas>
-                </div>
-                <div class="btnone">
-                    <select name="position">
-                        <option value="u">Arriba</option>
-                        <option value="m">Medio</option>
-                        <option value="b">Abajo</option>
-                    </select>
+        <span>Ciudad <select name="city"></select></span>
+        <span>Año    <input type="number" name="year" pattern="\d*" min="0" max="9999" value="0" /></span>
+        <span>Mes    <select name="dmonth"></select></span>
+        <span class="material-symbols-outlined" id="image" >add_a_photo</span>
+        <span><input style="display:none" type="file" name="uimage" accept="image/*"></span>
+        <span class="material-symbols-outlined" id="dimage">save</span>
+        <span class="position"> Letras portada
+            <select name="position">
+                <option value="u">Arriba</option>
+                <option value="m">Medio</option>
+                <option value="b">Abajo</option>
+            </select>
+        </span>
+        <input type="color" name="background" value="#FFFFFF" />
+        <br />
 
-                    <input type="color" name="background" value="#ffffff" />
-                </div>
-            </div>
-        </div>
+        <canvas id="prev" width="595" height="842"></canvas>
     </body>
 </html>

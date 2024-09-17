@@ -1,62 +1,9 @@
 /* Styles */
-body, input, select {
+body {
    font-family: monospace;
+   font-size: 1vmax;
    line-height: 1.5vmax;
    margin: 0.1%;
    text-align: left;
    vertical-align: top;
-}
-
-/* Table */
-.table {
-    display: table;
-    width: 99%;
-    border-collapse: collapse;
-}
-/* Row */
-.table div {
-    display: table-row;
-}
-/* Cell */
-.table div div {
-    display: table-cell;
-    border: solid #000000 0.1vmax;
-    text-align: center;
-    vertical-align: middle;
-    padding: 0.1vmax;
-    width: 25%;
-}
-
-.table div div.c3 {
-    width: 74.99% !important;
-}
-
-.btnone {
-    border-top: none !important;
-}
-
-/* form */
-input, select, button {
-    height: 90%;
-    width: 80%;
-}
-
-input[type=color] {
-    margin-top:0.5vmax;
-    height: 2vmax;
-}
-
-/* canvas prev */
-canvas {
-    border: solid #000000 0.1vmax;
-    margin: 0.1vmax;
-    width: 37%;
-}
-
-#image, #dimage {
-    cursor: pointer;
-}
-
-input[type=file] {
-    display: none;
 }
