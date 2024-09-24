@@ -8,8 +8,6 @@ let img    = new Image();
 // Crear un lienzo
 var canvas = document.createElement('canvas');
 
-//https://programadorwebvalencia.com/Javascript-nombre-del-mes-en-castellano/
-
 const __Objeto = new Objeto();
 
 // Funciones
@@ -94,7 +92,7 @@ function main() {
         $('[name=uimage]').click();
     });
 
-    $('[name=year], [name=city], [name=dmonth], [name=background], [name=position]')
+    $('[name=year], [name=city], [name=dmonth], [name=background], [name=position], [name=dates]')
         .change(function(e) {update()});
     $('#dimage').click(function(e) {download()});
 
@@ -121,12 +119,15 @@ function main() {
         }
     });
 
+    $('canvas').css({'height': height * (1 - 0.07)});
+
     update();
 }
 
 // Actualizar valores de la clase
 function update() {
     $('[class=position]').css({'display': ($('[name=dmonth]').val() == 0?'':'none')});
+    $('[class=party]').css({'display': ($('[name=dmonth]').val() != 0?'':'none')});
 
     if ($('[name=year]').val() > 9999) {
         $('[name=year]').val(9999);
@@ -177,6 +178,7 @@ function calculateTints(color, steps) {
         const b = Math.round(rgb.b + (255 - rgb.b) * factor);
         tints.push(rgbToHex(r, g, b));
     }
+
     return tints;
 }
 
@@ -616,17 +618,21 @@ function draw(cnv) {
     cnv.width  = 595;
     cnv.height = 842;
     var month = kwargs['dmonth'];
+    var w = cnv.width;
+    var h = cnv.height;
 
     var ctx = cnv.getContext('2d');
    
-    ctx.clearRect(0, 0, cnv.width, cnv.height);
-    ctx.rect(0, 0, cnv.width, cnv.height);
-    ctx.fillStyle = kwargs['color'];
-    ctx.fill();
-    
-    var w = cnv.width;
-    var h = cnv.height;
-    
+    var grad = ctx.createLinearGradient(0, 0, 0, h * (1 + 2));
+    grad.addColorStop(1, InversoColor(kwargs['color']));
+    grad.addColorStop(0, kwargs['color']);
+
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.fillStyle = grad;
+
+    ctx.fillRect(0, 0, w, h);
+
     // Establecer imagen de fondo
     try {
         var img_w = kwargs['img'].width;
@@ -803,7 +809,8 @@ function draw(cnv) {
                     if (party[z] == tb_msg[y][x]) {
                         z++;
                         ctx.beginPath();
-                        ctx.rect(aux_x - 5, aux_y + 5, 1.3 * infoFont[0], -1.5 * infoFont[1]);
+                        ctx.arc(aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 0, 2 * Math.PI);
+                        ctx.lineWidth = 2;
                         ctx.strokeStyle = InversoColor(kwargs['color']);
                         ctx.stroke();
                         ctx.font = 'bold ' + infoFont[2];

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="es">
     <head>
-        <title>Titulo</title>
+        <title>Gen Calendario</title>
         <meta charset="UTF-8">
         <meta name="author" content="Juan Jose">
         <meta name="description" content="">
@@ -21,6 +21,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/colorthief@2.3.0/dist/color-thief.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-multidatespicker/1.6.6/jquery-ui.multidatespicker.min.js"></script>
         <script language="javascript" type="text/javascript">
             // Remplazar de la posicion 0 al index por lo indicado
             String.prototype.replaceAt = function(index, replacement) {
@@ -239,22 +241,44 @@
 
     </head>
     <body>
-        <span>Ciudad <select name="city"></select></span>
-        <span>Año    <input type="number" name="year" pattern="\d*" min="0" max="9999" value="0" /></span>
-        <span>Mes    <select name="dmonth"></select></span>
-        <span class="material-symbols-outlined" id="image" >add_a_photo</span>
-        <span><input style="display:none" type="file" name="uimage" accept="image/*"></span>
-        <span class="material-symbols-outlined" id="dimage">save</span>
-        <span class="position"> Letras portada
-            <select name="position">
-                <option value="u">Arriba</option>
-                <option value="m">Medio</option>
-                <option value="b">Abajo</option>
-            </select>
-        </span>
-        <input type="color" name="background" value="#FFFFFF" />
-        <br />
+        <div class="container">
+            <div>
+                <span class="material-symbols-outlined" id="image">add_a_photo</span>
+                <span class="material-symbols-outlined" id="dimage">download</span>
+                <input style="display:none" type="file" name="uimage" accept="image/*">
+            </div>
+            <div>
+                <span>Ciudad</span>
+                <select name="city"></select>
+            </div>
+            <div>
+                <span>Año</span>
+                <input type="number" name="year" pattern="\d*" min="0" max="9999" value="0" />
+            </div>
+            <div>
+                <span>Mes</span>
+                <select name="dmonth"></select>
+            </div>
+            <div class="party">
+                <span>Incluir fechas importantes</span>
+                <input type="text" name="dates" />
+            </div>
+            <div class="position">
+                <span>Letras portada</span>
+                <select name="position">
+                    <option value="u">Arriba</option>
+                    <option value="m">Medio</option>
+                    <option value="b">Abajo</option>
+                </select>
+            </div>
+            <div>
+                <span>Color del fondo</span>
+                <input type="color" name="background" value="#FFFFFF" />
+            </div>
+        </div>
 
-        <canvas id="prev" width="595" height="842"></canvas>
+        <div class="canvas-container">
+            <canvas id="prev" width="595" height="842"></canvas>
+        </div>
     </body>
 </html>

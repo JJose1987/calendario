@@ -6,4 +6,64 @@ body {
    margin: 0.1%;
    text-align: left;
    vertical-align: top;
+   
+   background-color: #f4f4f9;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.container {
+    background: #ffffff;
+    padding: 1vmax;
+    margin: 1vmax;
+    border-radius: 1vmax;
+    box-shadow: 0 0 1vmax rgba(0, 0, 0, 0.1);
+    width: 20%;
+}
+
+.container div {
+    margin-bottom: 0.5vmax;
+    display: block;
+}
+
+.container span {
+    margin-bottom: 0.5vmax;
+}
+
+.container select,
+.container input[type="number"],
+.container input[type="text"],
+.container input[type="color"] {
+    width: 100%;
+    padding: 0.5vmax;
+    border: 0.1vmax solid #ccc;
+    border-radius: 0.5vmax;
+    box-sizing: border-box;
+}
+
+.container input[type="color"] {
+    height: 3vmax;
+}
+
+.material-symbols-outlined {
+    cursor: pointer;
+    font-size: 3vmax;
+    color: #555;
+    margin-right: 0.5vmax;
+}
+
+#image:hover,
+#dimage:hover {
+    color: #000;
+}
+
+.canvas-container {
+    text-align: center;
+    margin-top: 1vmax;
+}
+
+canvas {
+    border: 0.1vmax solid #ccc;
+    border-radius: 1vmax;
 }
