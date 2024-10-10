@@ -52,10 +52,8 @@ body {
     color: #555;
     margin-right: 0.5vmax;
 }
-
-#image:hover,
-#dimage:hover {
-    color: #000;
+.material-symbols-outlined:hover{
+    font-weight: bold;
 }
 
 .canvas-container {
@@ -66,4 +64,29 @@ body {
 canvas {
     border: 0.1vmax solid #ccc;
     border-radius: 1vmax;
+}
+/*  */
+.calendar {
+    border: 0.1vmax solid #ccc;
+    border-radius: 1vmax;
+    display: grid !important;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.2vmax;
+    text-align: center;
+}
+.day {
+    padding: 1%;
+    cursor: pointer;
+}
+.day.selected {
+    background-color: #007BFF;
+    color: white;
+}
+.day.disabled {
+    background-color: #f0f0f0;
+    color: #ccc;
+    cursor: default;
+}
+.header {
+    font-weight: bold;
 }

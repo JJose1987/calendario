@@ -3,12 +3,10 @@
 // Variables
 let kwargs = {};
 let cps    = [];
+let selectedDates = [];
 let img    = new Image();
-
 // Crear un lienzo
 var canvas = document.createElement('canvas');
-
-const __Objeto = new Objeto();
 
 // Funciones
 function main() {
@@ -79,22 +77,29 @@ function main() {
     // Selector de descarga
     $('[name=dmonth]').append($('<option>', {value: 0, text : 'Portada'}));
 
-    for (var i = 1; i <= 12; i++) {
-        var name_month = new Intl.DateTimeFormat(userLanguage, { month: 'long'}).format(new Date(y, i - 1));
-
+    $.each(getNameMonths(), function (i, item) {
         $('[name=dmonth]').append($('<option>', {
-            value: i,
-            text : name_month.capitalize()
+            value: i + 1,
+            text : item
         }));
-    }
+    });
 
+    // 
     $('#image').click(function(e) {
         $('[name=uimage]').click();
     });
+    
+    $('#palette').click(function(e) {
+        $('[name=background]').click();
+    });
 
-    $('[name=year], [name=city], [name=dmonth], [name=background], [name=position], [name=dates]')
-        .change(function(e) {update()});
+
+    $('[name=year], [name=city], [name=dmonth], [name=background], [name=position]')
+        .change(function(e) {update();});
     $('#dimage').click(function(e) {download()});
+    
+    $('[name=year], [name=dmonth]')
+        .change(function(e) {renderCalendar(kwargs['year'], kwargs['dmonth']);});
 
     $('[name=uimage]').change(function(e) {
         var reader = new FileReader();
@@ -124,6 +129,30 @@ function main() {
     update();
 }
 
+// Obterner los nombres de los meses
+function getNameMonths() {
+    var out = [];
+    
+    for (var i = 0; i <= 11; i++) {
+        var name_month = (new Intl.DateTimeFormat(userLanguage, { month: 'long'}).format(new Date(y, i))).capitalize();
+        out.push(name_month);
+    }
+
+    return out;
+}
+
+// Obterner los nombres de los días de la semana
+function getNameWeekDays() {
+    var out = [];
+
+    for (var i = 1; i <= 7; i++) {
+        var name_weekday = (new Intl.DateTimeFormat(userLanguage, {weekday: 'long'}).format((new Date()).addDays(0, i))).capitalize();
+        out.push(name_weekday);
+    }
+
+    return out;
+}
+
 // Actualizar valores de la clase
 function update() {
     $('[class=position]').css({'display': ($('[name=dmonth]').val() == 0?'':'none')});
@@ -133,14 +162,69 @@ function update() {
         $('[name=year]').val(9999);
     }
 
-    kwargs['year']     = $('[name=year]').val();
     kwargs['position'] = $('[name=position]').val();
-    kwargs['city']     = $('[name=city]').val();
-    kwargs['dmonth']   = $('[name=dmonth]').val();
     kwargs['color']    = $('[name=background]').val();
+    kwargs['year']     = parseInt($('[name=year]').val());
+    kwargs['city']     = parseInt($('[name=city]').val());
+    kwargs['dmonth']   = parseInt($('[name=dmonth]').val());
+    draw(document.getElementById('prev'));
+}
 
-    var pcanvas = document.getElementById('prev');
-    draw(pcanvas);
+// Actualizar renderCalendar
+function renderCalendar(year, month) {
+    $("#calendar").empty();
+
+    if (month > 0) {
+        // Encabezados de los días de la semana
+        const daysOfWeek = getNameWeekDays();
+
+        $.each(daysOfWeek, function(_, day) {
+            $("<div>")
+                .text(day.substring(0,2))
+                .addClass("header")
+                .appendTo($("#calendar"));
+        });
+
+        const firstDay = new Date(year, month - 1, 1).getDay();
+        const lastDate = new Date(year, month + 0, 0).getDate();
+
+
+        // Rellenar los días previos al primer día del mes
+        for (let i = 1; i < firstDay; i++) {
+        $("<div>")
+            .addClass("day disabled")
+            .appendTo($("#calendar"));
+        }
+
+        // Rellenar los días del mes
+        for (let day = 1; day <= lastDate; day++) {
+            const date = day;
+
+            const $dayElement = $("<div>")
+                .text(('0' + day).slice(-2))
+                .addClass("day")
+                .data("date", date)
+                .toggleClass("selected", selectedDates.includes(date))
+                .on("click", function() {
+                    if ($(this).hasClass("disabled")) return;
+
+                    if (selectedDates.includes(date)) {
+                        selectedDates = selectedDates.filter(d => d !== date);
+                        $(this).removeClass("selected");
+                    } else {
+                        selectedDates.push(date);
+                        $(this).addClass("selected");
+                    }
+                    
+                    selectedDates.sort(function(a, b) {
+                        return a - b;
+                    });
+                    
+                    update();
+                });
+            $("#calendar").append($dayElement);
+        }
+    }
 }
 
 // Invertir un color dado
@@ -699,7 +783,11 @@ function draw(cnv) {
         month = month - 1;
 
         var tb_msg = [];
-        tb_msg[y] = ['  ', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'];
+
+        (tb_msg[y] = []).push(' ');
+        $.each(getNameWeekDays(), function (i, item) {
+            tb_msg[y].push(item.substring(0,2));
+        });
 
         var infoFont = fontWH('#'.repeat((tb_msg[0].toString()).length), cnv.width * (1 - 0.20), typeFont);
         ctx.font = infoFont[2];
@@ -731,8 +819,10 @@ function draw(cnv) {
         w = cnv.width;
         h = cnv.height;
 
-        var party = partyDays();
-        var z = 0;
+        var party     = partyDays();
+        var ind_p0    = 0;
+        var yourparty = selectedDates;
+        var ind_p1    = 0;
 
         ctx.beginPath();
         ctx.moveTo(infoFont[0] + 20, (h / 2));
@@ -805,9 +895,16 @@ function draw(cnv) {
 
                 if (x == 0 || y == 0) {
                     ctx.font = 'italic ' + infoFont[2];
-                } else {
-                    if (party[z] == tb_msg[y][x]) {
-                        z++;
+                } else { 
+                    if (yourparty[ind_p1] == tb_msg[y][x]) {
+                        ind_p1++;
+                        ctx.beginPath();
+
+                        ctx.font = 'bold italic ' + infoFont[2];
+                    }
+
+                    if (party[ind_p0] == tb_msg[y][x]) {
+                        ind_p0++;
                         ctx.beginPath();
                         ctx.arc(aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 0, 2 * Math.PI);
                         ctx.lineWidth = 2;
@@ -824,8 +921,8 @@ function draw(cnv) {
         ctx.font = 'italic ' + infoFont[2];
         ctx.fillStyle = InversoColor(kwargs['color']);
 
-        name_month = new Intl.DateTimeFormat(userLanguage, { month: 'long'}).format(new Date(kwargs['year'], month));
-        msg = name_month.capitalize() + (' ').repeat(10 - name_month.length);
+        var name_month = getNameMonths()[month];
+        msg = name_month + (' ').repeat(10 - name_month.length);
 
         x = 3;
         y = 6;
