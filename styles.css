@@ -1,6 +1,8 @@
 /* Styles */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
 body {
-   font-family: monospace;
+   font-family: "Roboto Mono", monospace;
    font-size: 1vmax;
    line-height: 1.5vmax;
    margin: 0.1%;
@@ -39,6 +41,13 @@ body {
 .container input[type="number"],
 .container input[type="text"],
 .container input[type="color"] {
+    font-family: "Roboto Mono", monospace;
+    font-size: 1vmax;
+    line-height: 1.5vmax;
+    margin: 0.1%;
+    text-align: left;
+    vertical-align: top;
+
     width: 100%;
     padding: 0.5vmax;
     border: 0.1vmax solid #ccc;

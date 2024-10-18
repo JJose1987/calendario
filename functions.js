@@ -141,7 +141,6 @@ function main() {
         $('#menu').css({'display' : 'none'});
         $('canvas').css({'height': height * (1 - 0.07)});
     }
-    
 
     update();
 }
@@ -824,6 +823,8 @@ function draw(cnv) {
     try {
         var img_w = kwargs['img'].width;
         var img_h = kwargs['img'].height;
+        
+        $('#infoimg').text('w = ' + img_w + ', h = ' + img_h);
 
         var img_pos = [0, 0, w, h];
         var n       = 1;
