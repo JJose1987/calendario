@@ -20,6 +20,10 @@ body {
     border-radius: 1vmax;
     box-shadow: 0 0 1vmax rgba(0, 0, 0, 0.1);
     width: 20%;
+
+    position: absolute;
+    top: 5%; 
+    left: 1%; 
 }
 
 .container div {
@@ -61,9 +65,23 @@ body {
     margin-top: 1vmax;
 }
 
-canvas {
+.canvas-container canvas {
     border: 0.1vmax solid #ccc;
     border-radius: 1vmax;
+}
+
+.canvas-container span {
+    background: #ffffff;
+    padding: 0.5vmax;
+    border-radius: 50%;
+    box-shadow: 0 0 1vmax rgba(0, 0, 0, 0.1);
+    text-align: center;
+    vertical-align: center;
+
+    position: absolute; 
+    top: 1%; 
+    left: 1%; 
+    cursor: pointer;
 }
 /*  */
 .calendar {

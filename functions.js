@@ -97,6 +97,15 @@ function main() {
     $('[name=year], [name=city], [name=dmonth], [name=background], [name=position]')
         .change(function(e) {update();});
     $('#dimage').click(function(e) {download()});
+    $('#menu').click(function(e) {
+        if ($('#menu').text() == 'menu') {
+            $('#menu').text('close');
+            $('div.container').css({'display' : ''});
+        } else {
+            $('#menu').text('menu');
+            $('div.container').css({'display' : 'none'});
+        }
+    });
     
     $('[name=year], [name=dmonth]')
         .change(function(e) {renderCalendar(kwargs['year'], kwargs['dmonth']);});
@@ -124,7 +133,15 @@ function main() {
         }
     });
 
-    $('canvas').css({'height': height * (1 - 0.07)});
+    if (isPhone) {
+        $('#menu').css({'display' : ''});
+        $('div.container').css({'display' : 'none'});
+        $('canvas').css({'width': width * (1 - 0.07)});
+    } else {
+        $('#menu').css({'display' : 'none'});
+        $('canvas').css({'height': height * (1 - 0.07)});
+    }
+    
 
     update();
 }
@@ -697,6 +714,99 @@ function fontWH(msg = '', maxWidth = 0, typeFont = '##px') {
     return [fontW, auxContext.measureText(msg).actualBoundingBoxAscent, auxContext.font];
 }
 
+// Dibujar poligono regular de n lados
+function drawPoligon(ctx, color, x, y, size, sides, fill = false) {
+    const angle = (2 * Math.PI) / sides;
+
+    ctx.beginPath();
+    for (let i = 0; i < sides; i++) {
+        const xPos = x + size * Math.cos(angle * i);
+        const yPos = y + size * Math.sin(angle * i);
+        if (i === 0) {
+            ctx.moveTo(xPos, yPos);
+        } else {
+            ctx.lineTo(xPos, yPos);
+        }
+    }
+
+    if (fill) {
+        ctx.fillStyle = color;
+        ctx.fill();
+    }
+    
+    ctx.strokeStyle = color;
+    ctx.closePath();
+    ctx.stroke();
+}
+
+// Dibujar estrella regular de n lados
+function drawStar(ctx, color, x, y, size, sides, fill = false) {
+    const angle = (Math.PI / sides); // Ángulo para los vértices exteriores
+    const radioIn = size / 2; // Radio para los vértices interiores
+
+    ctx.beginPath();
+    for (let i = 0; i < sides * 2; i++) {
+        const radio = i % 2 === 0 ? size : radioIn; // Alternar entre exterior e interior
+        const xPos = x + radio * Math.cos(i * angle);
+        const yPos = y - radio * Math.sin(i * angle); // Invertir Y para el canvas
+        if (i === 0) {
+            ctx.moveTo(xPos, yPos);
+        } else {
+            ctx.lineTo(xPos, yPos);
+        }
+    }
+
+    if (fill) {
+        ctx.fillStyle = color;
+        ctx.fill();
+    }
+    
+    ctx.strokeStyle = color;
+    ctx.closePath();
+    ctx.stroke();
+}
+
+// Dubujar la fase lunar
+function drawMoon(ctx, color, x, y, size, fase) {
+    // Dibuja la luna llena
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    
+    ctx.beginPath();
+    // Ajusta el recorte según la fase de la luna
+    switch(fase) {
+        case 'New':
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            break;
+        case 'CrescentQuarter':
+            ctx.arc(x + size / 2, y, size, 0, Math.PI * 2);
+            break;
+        case 'FirstQuarter':
+            ctx.rect(x, y - size, size, size * 2);
+            break;
+        case 'WaxingGibbous':
+            ctx.arc(x - size / 2, y, size, 0, Math.PI * 2);
+            break;
+        case 'Full':
+            // Luna llena, ya dibujada
+            break;
+        case 'WaningGibbous':
+            ctx.arc(x - size / 2, y, size, 0, Math.PI * 2);
+            break;
+        case 'LastQuarter':
+            ctx.rect(x - size, y - size, size, size * 2);
+            break;
+        case 'LastRoom':
+            ctx.arc(x - size / 2, y, size, 0, Math.PI * 2);
+            break;
+    }
+
+    ctx.fillStyle = InversoColor(color);
+    ctx.fill();
+}
+
 // Dibujar el cnv
 function draw(cnv) {
     cnv.width  = 595;
@@ -706,15 +816,8 @@ function draw(cnv) {
     var h = cnv.height;
 
     var ctx = cnv.getContext('2d');
-   
-    var grad = ctx.createLinearGradient(0, 0, 0, h * (1 + 2));
-    grad.addColorStop(1, InversoColor(kwargs['color']));
-    grad.addColorStop(0, kwargs['color']);
 
-    ctx.clearRect(0, 0, w, h);
-
-    ctx.fillStyle = grad;
-
+    ctx.fillStyle = kwargs['color'];
     ctx.fillRect(0, 0, w, h);
 
     // Establecer imagen de fondo
@@ -843,74 +946,37 @@ function draw(cnv) {
                 var aux_y = ((y + 1) * (h / 15)) + (h / 2);
                 // Fase lunar
                 if (x != 0 && y != 0 && tb_msg[y][x] != '  ') {
-                    var moon = (new Date(kwargs['year'], month, tb_msg[y][x])).moonfase()[0];
-
-                    ctx.save();
-                    ctx.font = (infoFont[0] / 4) + 'px \'Material Symbols Outlined\'';
-                    ctx.fillStyle = InversoColor(kwargs['color']);
-                    var rotate = false;
-                    msg = ''
-
-                    switch(moon) {
-                        case 0:
-                            msg = '';
-                            break;
-                        case 1:
-                            msg = 'brightness_3';
-                            break;
-                        case 2:
-                            msg = 'brightness_2';
-                            break;
-                        case 3:
-                            msg = 'dark_mode';
-                            break;
-                        case 4:
-                            msg = 'brightness_1';
-                            break;
-                        case 5:
-                            rotate = true;
-                            msg = 'dark_mode';
-                            break;
-                        case 6:
-                            rotate = true;
-                            msg = 'brightness_2';
-                            break;
-                        case 7:
-                            rotate = true;
-                            msg = 'brightness_3';
-                            break;
-                    }
-
-                    if (rotate) {
-                        ctx.rotate(1.0 * Math.PI);
-                        ctx.fillText(msg, -1 * aux_x - 10, -1 * aux_y);
-                    } else {
-                        ctx.fillText(msg, aux_x, aux_y + (infoFont[1] / 3));
-                    }
-
-                    ctx.restore();
+                    var moon = (new Date(kwargs['year'], month, tb_msg[y][x])).moonfase()[1];
+                    drawMoon(ctx, InversoColor(kwargs['color']), aux_x, aux_y + (infoFont[1] / 2), 5, moon);
                 }
+
                 ctx.font = infoFont[2];
                 ctx.fillStyle = InversoColor(kwargs['color']);
 
                 if (x == 0 || y == 0) {
                     ctx.font = 'italic ' + infoFont[2];
-                } else { 
+                } else {
                     if (yourparty[ind_p1] == tb_msg[y][x]) {
                         ind_p1++;
-                        ctx.beginPath();
 
+                        drawPoligon(ctx, InversoColor(kwargs['color']), aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 8, true);
+
+                        ctx.fillStyle = kwargs['color'];
                         ctx.font = 'bold italic ' + infoFont[2];
                     }
 
                     if (party[ind_p0] == tb_msg[y][x]) {
                         ind_p0++;
-                        ctx.beginPath();
-                        ctx.arc(aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 0, 2 * Math.PI);
-                        ctx.lineWidth = 2;
-                        ctx.strokeStyle = InversoColor(kwargs['color']);
-                        ctx.stroke();
-                        ctx.font = 'bold ' + infoFont[2];
+
+                        if (yourparty.includes(parseInt(tb_msg[y][x]))) {
+                            drawPoligon(ctx, kwargs['color'], aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 4, true);
+                            ctx.fillStyle =  InversoColor(kwargs['color']);
+                        } else {
+                            drawPoligon(ctx, InversoColor(kwargs['color']), aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 4, true);
+                            ctx.fillStyle = kwargs['color'];
+                        }
+
+                        ctx.font = 'bold italic ' + infoFont[2];
                     }
                 }
 
