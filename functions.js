@@ -823,8 +823,6 @@ function draw(cnv) {
     try {
         var img_w = kwargs['img'].width;
         var img_h = kwargs['img'].height;
-        
-        $('#infoimg').text('w = ' + img_w + ', h = ' + img_h);
 
         var img_pos = [0, 0, w, h];
         var n       = 1;
@@ -843,6 +841,8 @@ function draw(cnv) {
                 }
             }
         } else if (img_w < img_h) {
+            $('#infoimg').text('w = ' + img_w + ', h = ' + img_h);
+
             n = (w * img_h) / h;
             
             if (month == 0) {
