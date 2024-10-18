@@ -135,7 +135,7 @@ function main() {
 
     if (isPhone) {
         $('#menu').css({'display' : ''});
-        $('div.container').css({'display' : 'none'});
+        $('div.container').css({'display' : 'none', 'width' : '50%'});
         $('canvas').css({'width': width * (1 - 0.07)});
     } else {
         $('#menu').css({'display' : 'none'});
