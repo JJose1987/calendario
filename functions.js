@@ -250,6 +250,8 @@ function renderCalendar(year, month) {
                 .data("date", date)
                 .toggleClass("selected", selectedDates.includes(date))
                 .on("click", function() {
+                    $('[name=dayev]').val(date);
+
                     if ($(this).hasClass("disabled")) 
                         return;
 
@@ -872,10 +874,8 @@ function draw(cnv) {
                 }
             }
         } else if (img_w < img_h) {
-            $('#infoimg').text('w = ' + img_w + ', h = ' + img_h);
+            n = (h * img_w) / img_h;
 
-            n = (w * img_h) / h;
-            
             if (month == 0) {
                 img_pos = [(w - n) / 2, 0, n, h];
             } else {
