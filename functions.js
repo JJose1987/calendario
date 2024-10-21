@@ -1,7 +1,7 @@
 /* JavaScript */
 /* https://www.degraeve.com/reference/urlencoding.php */
 // Variables
-let kwargs = {};
+let kwargs = {dayev : []};
 let cps    = [];
 let selectedDates = [];
 let img    = new Image();
@@ -94,7 +94,7 @@ function main() {
     });
 
 
-    $('[name=year], [name=city], [name=dmonth], [name=background], [name=position]')
+    $('[name=year], [name=city], [name=dmonth], [name=background], [name=position], [name=event]')
         .change(function(e) {update();});
     $('#dimage').click(function(e) {download()});
     $('#menu').click(function(e) {
@@ -106,6 +106,7 @@ function main() {
             $('div.container').css({'display' : 'none'});
         }
     });
+    $('#resetmonth').click(function(e) {resetMonth()});
     
     $('[name=year], [name=dmonth]')
         .change(function(e) {renderCalendar(kwargs['year'], kwargs['dmonth']);});
@@ -145,6 +146,22 @@ function main() {
     update();
 }
 
+// Resetear los campos informados
+function resetMonth() {
+    // resetar imagen, festivos del mes, razon del festivo
+    kwargs['img']   = null;
+    $('[name=background]').val('#FFFFFF');
+    $('[name=position]').val('u');
+    $('[name=dayev]').val(1);
+    $('[name=event]').val('');
+    
+    kwargs['dayev'] = [];
+    selectedDates = [];
+    renderCalendar(kwargs['year'], kwargs['dmonth']);
+    
+    update();
+}
+
 // Obterner los nombres de los meses
 function getNameMonths() {
     var out = [];
@@ -178,11 +195,14 @@ function update() {
         $('[name=year]').val(9999);
     }
 
+    /* */
     kwargs['position'] = $('[name=position]').val();
     kwargs['color']    = $('[name=background]').val();
     kwargs['year']     = parseInt($('[name=year]').val());
     kwargs['city']     = parseInt($('[name=city]').val());
     kwargs['dmonth']   = parseInt($('[name=dmonth]').val());
+    kwargs['dayev'][parseInt($('[name=dayev]').val()) - 1] = $('[name=event]').val();
+    /* */
     draw(document.getElementById('prev'));
 }
 
@@ -204,6 +224,14 @@ function renderCalendar(year, month) {
         const firstDay = new Date(year, month - 1, 1).getDay();
         const lastDate = new Date(year, month + 0, 0).getDate();
 
+        // Rellenar la select para indicar el motivo día
+        $('[name=dayev]').empty();
+        for (var i = 1; i <= lastDate; i++) {
+            $('[name=dayev]').append($('<option>', {
+                value: i,
+                text : ('0' + i).slice(-2)
+            }));
+        }
 
         // Rellenar los días previos al primer día del mes
         for (let i = 1; i < firstDay; i++) {
@@ -222,7 +250,8 @@ function renderCalendar(year, month) {
                 .data("date", date)
                 .toggleClass("selected", selectedDates.includes(date))
                 .on("click", function() {
-                    if ($(this).hasClass("disabled")) return;
+                    if ($(this).hasClass("disabled")) 
+                        return;
 
                     if (selectedDates.includes(date)) {
                         selectedDates = selectedDates.filter(d => d !== date);
@@ -238,6 +267,7 @@ function renderCalendar(year, month) {
                     
                     update();
                 });
+
             $("#calendar").append($dayElement);
         }
     }
@@ -674,6 +704,7 @@ function partyDays() {
 
     return out;
 }
+
 // Calcular el Domingo de resurrecion, Semana Santa y sumarle dias
 function holyWeek(days = 0, weekday = null) {
     var out = (new Date(kwargs['year'], 1, 1)).holyWeek();
@@ -864,7 +895,7 @@ function draw(cnv) {
     }
 
     // Dibujar el mes o la portada
-    var typeFont = '##px \'Courier New monospace\'';
+    var typeFont = '##px \'Roboto Mono\'';
 
     if (month == 0) {
         msg = 'Calendario ' + kwargs['year'];
@@ -949,6 +980,13 @@ function draw(cnv) {
                 if (x != 0 && y != 0 && tb_msg[y][x] != '  ') {
                     var moon = (new Date(kwargs['year'], month, tb_msg[y][x])).moonfase()[1];
                     drawMoon(ctx, InversoColor(kwargs['color']), aux_x, aux_y + (infoFont[1] / 2), 5, moon);
+                    
+                    if (typeof kwargs['dayev'][parseInt(tb_msg[y][x]) - 1] != 'undefined') {
+                        var infoFont0 = fontWH('#'.repeat((tb_msg[0].toString()).length * 3), cnv.width * (1 - 0.20), typeFont);
+                        ctx.font = infoFont0[2];
+                        ctx.fillStyle = InversoColor(kwargs['color']);
+                        ctx.fillText(kwargs['dayev'][parseInt(tb_msg[y][x]) - 1], aux_x + 10, (aux_y + 5) + (infoFont[1] / 2));
+                    }
                 }
 
                 ctx.font = infoFont[2];
@@ -979,6 +1017,7 @@ function draw(cnv) {
 
                         ctx.font = 'bold italic ' + infoFont[2];
                     }
+
                 }
 
                 ctx.fillText(tb_msg[y][x], aux_x, aux_y);

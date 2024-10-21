@@ -101,19 +101,38 @@ body {
     gap: 0.2vmax;
     text-align: center;
 }
+
 .day {
     padding: 1%;
     cursor: pointer;
 }
+
 .day.selected {
     background-color: #007BFF;
     color: white;
 }
+
 .day.disabled {
     background-color: #f0f0f0;
     color: #ccc;
     cursor: default;
 }
+
 .header {
     font-weight: bold;
 }
+/* */
+.input-container {
+    display: flex; 
+    align-items: center;
+}
+
+.input-container select {
+    margin-right: 1%;
+    width: 25% !important;
+}
+
+.input-container input {
+    width: 70% !important;
+}
+/* */
