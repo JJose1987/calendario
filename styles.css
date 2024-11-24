@@ -1,51 +1,138 @@
 /* Styles */
-body, input, select {
-   font-family: monospace;
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+body {
+   font-family: "Roboto Mono", monospace;
+   font-size: 1vmax;
    line-height: 1.5vmax;
    margin: 0.1%;
    text-align: left;
    vertical-align: top;
+   
+   background-color: #f4f4f9;
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
 
-/* Table */
-.table {
-    display: table;
-    width: 99%;
-    border-collapse: collapse;
-}
-/* Row */
-.table div {
-    display: table-row;
-}
-/* Cell */
-.table div div {
-    display: table-cell;
-    border: solid #000000 0.1vmax;
-    text-align: center;
-    vertical-align: middle;
-    padding: 0.1vmax;
+.container {
+    background: #ffffff;
+    padding: 1vmax;
+    margin: 1vmax;
+    border-radius: 1vmax;
+    box-shadow: 0 0 1vmax rgba(0, 0, 0, 0.1);
     width: 20%;
+
+    position: absolute;
+    top: 5%; 
+    left: 1%; 
 }
 
-.table div div.c4 {
-    width: 79.99% !important;
+.container div {
+    margin-bottom: 0.5vmax;
+    display: block;
 }
 
-.btnone {
-    border-top: none !important;
+.container span {
+    margin-bottom: 0.5vmax;
 }
 
-/* form */
-input, select, button {
-    height: 90%;
-    width: 80%;
+.container select,
+.container input[type="number"],
+.container input[type="text"],
+.container input[type="color"] {
+    font-family: "Roboto Mono", monospace;
+    font-size: 1vmax;
+    line-height: 1.5vmax;
+    margin: 0.1%;
+    text-align: left;
+    vertical-align: top;
+
+    width: 100%;
+    padding: 0.5vmax;
+    border: 0.1vmax solid #ccc;
+    border-radius: 0.5vmax;
+    box-sizing: border-box;
 }
 
-/* canvas prev */
-canvas {
-    border: solid #000000 0.1vmax;
-    margin: 0.1vmax;
-
-    width: 35%;
+.container input[type="color"] {
+    height: 3vmax;
 }
 
+.material-symbols-outlined {
+    cursor: pointer;
+    font-size: 3vmax;
+    color: #555;
+    margin-right: 0.5vmax;
+}
+.material-symbols-outlined:hover{
+    font-weight: bold;
+}
+
+.canvas-container {
+    text-align: center;
+    margin-top: 1vmax;
+}
+
+.canvas-container canvas {
+    border: 0.1vmax solid #ccc;
+    border-radius: 1vmax;
+}
+
+.canvas-container span {
+    background: #ffffff;
+    padding: 0.5vmax;
+    border-radius: 50%;
+    box-shadow: 0 0 1vmax rgba(0, 0, 0, 0.1);
+    text-align: center;
+    vertical-align: center;
+
+    position: absolute; 
+    top: 1%; 
+    left: 1%; 
+    cursor: pointer;
+}
+/*  */
+.calendar {
+    border: 0.1vmax solid #ccc;
+    border-radius: 1vmax;
+    display: grid !important;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.2vmax;
+    text-align: center;
+}
+
+.day {
+    padding: 1%;
+    cursor: pointer;
+}
+
+.day.selected {
+    background-color: #007BFF;
+    color: white;
+}
+
+.day.disabled {
+    background-color: #f0f0f0;
+    color: #ccc;
+    cursor: default;
+}
+
+.header {
+    font-weight: bold;
+}
+/* */
+.input-container {
+    display: flex; 
+    align-items: center;
+}
+
+.input-container select {
+    margin-right: 1%;
+    width: 25% !important;
+}
+
+.input-container input {
+    width: 70% !important;
+}
+/* */

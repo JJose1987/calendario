@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="es">
     <head>
-        <title>Titulo</title>
+        <title>Gen Calendario</title>
         <meta charset="UTF-8">
         <meta name="author" content="Juan Jose">
         <meta name="description" content="">
@@ -9,9 +9,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="date" content="2021-01-01" scheme="YYYY-MM-DD">
         <meta name="identifier" content="" scheme="ISBN">
-        <!--<meta http-equiv="refresh" content="30">-->
-        <link rel="shortcut icon" href="" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!--<meta http-equiv="refresh" content="30">-->        
+        <link rel="shortcut icon" href="calendar_apps.png" />
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0..200" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" />
+
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-multidatespicker/1.6.6/jquery-ui.multidatespicker.css">
         <link rel="stylesheet" href="styles.css" />
         <style>
 
@@ -75,11 +82,15 @@
             }
 
             // Convertir RGB a Hexagemial
-            function rgbToHex(r, g, b) {
-                return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+            function rgbToHex(r, g = 0, b = 0) {
+                if (!$.isArray(r)) {
+                    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+                } else {
+                    return '#' + ((1 << 24) + (r[0] << 16) + (r[1] << 8) + r[2]).toString(16).slice(1).toUpperCase();
+                }
             }
 
-            // Obtener el numero de la semana
+            // Obtener el numero de la semana del año indicado
             Date.prototype.iso8601Week = function () {
                 // Create a copy of the current date, we don't want to mutate the original
                 const date = new Date(this.getTime());
@@ -97,6 +108,7 @@
                 const days = Math.round((thursday - jan1st) / 86400000); // 1 day = 86400000 ms
                 return Math.floor(days / 7) + 1;
             }
+
             // Convetir la fecha gregoriana en juliana
             Date.prototype.julian = function () {
                 const date = new Date(this.getTime());
@@ -153,11 +165,55 @@
 
                 return [0, 'New'];
             }
+            
+            // Sumar/Restar dias a la fecha indicada
+            Date.prototype.addDays = function (days = 0, weekday = null) {
+                const date = new Date(this.getTime());
+
+                var y = date.getFullYear();
+                var M = date.getMonth();
+                var d = date.getDate();
+
+                var out = new Date(y, M, d + days);
+                
+                if (weekday != null) {
+                    var i = [7, 1, 2, 3, 4, 5, 6][out.getDay()];
+                    var j = 1;
+
+                    while (i != weekday) {
+                        out = new Date(y, M, d + j++);
+                        if (++i > 7) {
+                            i = 1;
+                        }
+                    }
+                }
+
+                return out;
+            }
+
+            // Calcular el Domingo de resurreccion de un año indicado
+            Date.prototype.holyWeek = function () {
+                const date = new Date(this.getTime());
+
+                var y = date.getFullYear();
+                
+                var k = parseInt(y / 100);
+                var q = parseInt(k / 4);
+                var d = ((19 * (y % 19)) + ((15 - (parseInt((13 + (8 * k)) / 25)) + k - q) % 30)) % 30;
+                var e = ((2 * (y % 4)) + (4 * (y % 7)) + (6 * d) + ((4 + k - q) % 7)) % 7;
+
+                var out = new Date(y, 3, d + e - 9);
+                if ((d + e) < 10) {
+                    out = new Date(y, 2, d + e + 22);
+                }
+
+                return out;
+            }
 
             // Fecha del sistema
             var now = new Date().toISOString();
             var [y, M, d, h, m, s, nm] = now.match(/\d+/g);
-            nm = nm + "000";
+            nm = nm + '000';
             h  = parseInt(h) + 2;
 
             // URL de la pagina
@@ -176,7 +232,6 @@
 
             // Enviar Whatsapp
             function sendWhatsapp(value) {
-                console.log(value);
                 if (isPhone) {
                     location.href = 'whatsapp://send?text=' + ((value).replaceAll(' ', '%20')).replaceAll('\n', '%0A');
                 }
@@ -186,33 +241,58 @@
                 main();
             });
         </script>
-        <script src="class.js"></script>
         <script src="functions.js"></script>
 
     </head>
     <body>
-        <div class="table">
+        <div class="container">
             <div>
-                <div><input type="number" name="year" pattern="\d*" min="0" value="0" /></div>
-                <div><select name="city"></select></div>
-                <div><select name="dmonth"></select></div>
-                <div><button class="btn fa fa-file-image-o" id="image"></button></div>
-                <div><button class="btn fa fa-save" id="dimage"></button></div>
+                <span class="material-symbols-outlined" id="image">add_a_photo</span>
+
+                <span class="material-symbols-outlined" id="palette">palette</span>
+                <input style="display:none" type="color" name="background" value="#FFFFFF" />
+
+                <span class="material-symbols-outlined" id="dimage">download</span>
+                <input style="display:none" type="file" name="uimage" accept="image/*">
+                
+                <span class="material-symbols-outlined" id="resetmonth">reset_focus</span>
+                
+                <br /><span id="infoimg"></span>
+            </div>
+            <div>
+                <span>Ciudad</span>
+                <select name="city"></select>
+            </div>
+            <div>
+                <span>Año</span>
+                <input type="number" name="year" pattern="\d*" min="0" max="9999" value="0" />
+            </div>
+            <div>
+                <span>Mes</span>
+                <select name="dmonth"></select>
+            </div>
+            <div class="party">
+                <span>Incluir tus fechas importantes</span>
+                <div id="calendar" class="calendar"></div>
+
+                <div class="input-container">
+                    <select name="dayev" ></select>
+                    <input type="text" name="event" maxlength="8" />
+                </div>
+            </div>
+            <div class="position">
+                <span>Letras portada</span>
+                <select name="position">
+                    <option value="u">Arriba</option>
+                    <option value="m">Medio</option>
+                    <option value="b">Abajo</option>
+                </select>
             </div>
         </div>
-        <div class="table">
-            <div>
-                <div class="c4 btnone" >
-                    <canvas id="prev" width="595" height="842"></canvas>
-                </div>
-                <div class="btnone">
-                    <select name="position">
-                        <option value="u">Arriba</option>
-                        <option value="m">Medio</option>
-                        <option value="b">Abajo</option>
-                    </select>
-                </div>
-            </div>
+
+        <div class="canvas-container">
+            <span class="material-symbols-outlined" id="menu">menu</span>
+            <canvas id="prev" width="595" height="842"></canvas>
         </div>
     </body>
 </html>
