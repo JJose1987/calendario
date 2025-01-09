@@ -841,8 +841,10 @@ function drawMoon(ctx, color, x, y, size, fase) {
 
 // Dibujar el cnv
 function draw(cnv) {
-    cnv.width  = 595;
-    cnv.height = 842;
+    var q = 22;
+    cnv.width  = q * 595;
+    cnv.height = q * 842;
+
     var month = kwargs['dmonth'];
     var w = cnv.width;
     var h = cnv.height;
@@ -958,28 +960,30 @@ function draw(cnv) {
         var ind_p0    = 0;
         var yourparty = selectedDates;
         var ind_p1    = 0;
-
+        
         ctx.beginPath();
-        ctx.moveTo(infoFont[0] + 20, (h / 2));
-        ctx.lineTo(infoFont[0] + 20, h);
+        ctx.moveTo(infoFont[0] + q * 20, (h / 2));
+        ctx.lineTo(infoFont[0] + q * 20, h);
         ctx.strokeStyle = InversoColor(kwargs['color']);
+        ctx.lineWidth = q;
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.moveTo(0, (h / 2) + (2 * infoFont[1]) + 20);
-        ctx.lineTo(w, (h / 2) + (2 * infoFont[1]) + 20);
+        ctx.moveTo(0, (h / 2) + (2 * infoFont[1]) + q * 20);
+        ctx.lineTo(w, (h / 2) + (2 * infoFont[1]) + q * 20);
         ctx.strokeStyle = InversoColor(kwargs['color']);
+        ctx.lineWidth = q;
         ctx.stroke();
 
         for (var y = 0; y < tb_msg.length; y++) {
             for (var x = 0; x < (tb_msg[y]).length; x++) {
-                // coordenadas
-                var aux_x = (x * (w / (tb_msg[0]).length)) + 10;
+                // Coordenadas
+                var aux_x = (x * (w / (tb_msg[0]).length)) + (q * 10);
                 var aux_y = ((y + 1) * (h / 15)) + (h / 2);
                 // Fase lunar
                 if (x != 0 && y != 0 && tb_msg[y][x] != '  ') {
                     var moon = (new Date(kwargs['year'], month, tb_msg[y][x])).moonfase()[1];
-                    drawMoon(ctx, InversoColor(kwargs['color']), aux_x, aux_y + (infoFont[1] / 2), 5, moon);
+                    drawMoon(ctx, InversoColor(kwargs['color']), aux_x, aux_y + (infoFont[1] / 2), q * 5, moon);
                     
                     if (typeof kwargs['dayev'][parseInt(tb_msg[y][x]) - 1] != 'undefined') {
                         var infoFont0 = fontWH('#'.repeat((tb_msg[0].toString()).length * 3), cnv.width * (1 - 0.20), typeFont);
@@ -994,6 +998,11 @@ function draw(cnv) {
 
                 if (x == 0 || y == 0) {
                     ctx.font = 'italic ' + infoFont[2];
+                    // Numero de la semana
+                    if (x == 0) {
+                        ctx.font = 'italic ' + typeFont.replace('##', (infoFont[0] / 2));
+                    }
+                    
                 } else {
                     if (yourparty[ind_p1] == tb_msg[y][x]) {
                         ind_p1++;
