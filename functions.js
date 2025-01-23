@@ -164,26 +164,12 @@ function resetMonth() {
 
 // Obterner los nombres de los meses
 function getNameMonths() {
-    var out = [];
-    
-    for (var i = 0; i <= 11; i++) {
-        var name_month = (new Intl.DateTimeFormat(userLanguage, { month: 'long'}).format(new Date(y, i))).capitalize();
-        out.push(name_month);
-    }
-
-    return out;
+    return Array.from({length: 12}, (_, i) => (new Intl.DateTimeFormat(userLanguage, {month: 'long' }).format(new Date(0, i))).capitalize());
 }
 
 // Obterner los nombres de los días de la semana
 function getNameWeekDays() {
-    var out = [];
-
-    for (var i = 1; i <= 7; i++) {
-        var name_weekday = (new Intl.DateTimeFormat(userLanguage, {weekday: 'long'}).format((new Date()).addDays(0, i))).capitalize();
-        out.push(name_weekday);
-    }
-
-    return out;
+    return Array.from({length:  7}, (_, i) => (new Intl.DateTimeFormat(userLanguage, {weekday: 'long' }).format((new Date()).addDays(0, i + 1))).capitalize());
 }
 
 // Actualizar valores de la clase
@@ -751,6 +737,7 @@ function drawPoligon(ctx, color, x, y, size, sides, fill = false) {
     const angle = (2 * Math.PI) / sides;
 
     ctx.beginPath();
+
     for (let i = 0; i < sides; i++) {
         const xPos = x + size * Math.cos(angle * i);
         const yPos = y + size * Math.sin(angle * i);
@@ -765,7 +752,7 @@ function drawPoligon(ctx, color, x, y, size, sides, fill = false) {
         ctx.fillStyle = color;
         ctx.fill();
     }
-    
+
     ctx.strokeStyle = color;
     ctx.closePath();
     ctx.stroke();
@@ -1007,7 +994,7 @@ function draw(cnv) {
                     if (yourparty[ind_p1] == tb_msg[y][x]) {
                         ind_p1++;
 
-                        drawPoligon(ctx, InversoColor(kwargs['color']), aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 8, true);
+                        drawPoligon(ctx, InversoColor(kwargs['color']), aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 10, true);
 
                         ctx.fillStyle = kwargs['color'];
                         ctx.font = 'bold italic ' + infoFont[2];
@@ -1017,10 +1004,10 @@ function draw(cnv) {
                         ind_p0++;
 
                         if (yourparty.includes(parseInt(tb_msg[y][x]))) {
-                            drawPoligon(ctx, kwargs['color'], aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 4, true);
+                            drawPoligon(ctx, kwargs['color'], aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 5, true);
                             ctx.fillStyle =  InversoColor(kwargs['color']);
                         } else {
-                            drawPoligon(ctx, InversoColor(kwargs['color']), aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 4, true);
+                            drawPoligon(ctx, InversoColor(kwargs['color']), aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 5, true);
                             ctx.fillStyle = kwargs['color'];
                         }
 
