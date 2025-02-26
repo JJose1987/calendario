@@ -198,9 +198,19 @@ function renderCalendar(year, month) {
 
     if (month > 0) {
         // Encabezados de los días de la semana
+        // [6, 0, 1, 2, 3, 4, 5]
         const daysOfWeek = getNameWeekDays();
 
-        $.each(daysOfWeek, function(_, day) {
+        var taux = [daysOfWeek[6]
+            , daysOfWeek[0]
+            , daysOfWeek[1]
+            , daysOfWeek[2]
+            , daysOfWeek[3]
+            , daysOfWeek[4]
+            , daysOfWeek[5]
+        ];
+
+        $.each(taux, function(_, day) {
             $("<div>")
                 .text(day.substring(0,2))
                 .addClass("header")
@@ -669,7 +679,7 @@ function partyDays() {
         var aux = item;
         
         if (aux[0] == month) {
-            var weekDay = [7, 1, 2, 3, 4, 5, 6][(new Date(kwargs['year'], item[0], item[1])).getDay()];
+            var weekDay = [6, 0, 1, 2, 3, 4, 5][(new Date(kwargs['year'], item[0], item[1])).getDay()];
             
             if (weekDay == 7) {
                 if (((item[0] == v0[0]) && (item[1] == v0[1]))
@@ -909,7 +919,18 @@ function draw(cnv) {
         var tb_msg = [];
 
         (tb_msg[y] = []).push(' ');
-        $.each(getNameWeekDays(), function (i, item) {
+        
+        // [6, 0, 1, 2, 3, 4, 5]
+        var taux = [getNameWeekDays()[6]
+            , getNameWeekDays()[0]
+            , getNameWeekDays()[1]
+            , getNameWeekDays()[2]
+            , getNameWeekDays()[3]
+            , getNameWeekDays()[4]
+            , getNameWeekDays()[5]
+        ];
+        
+        $.each(taux, function (i, item) {
             tb_msg[y].push(item.substring(0,2));
         });
 
@@ -920,9 +941,9 @@ function draw(cnv) {
         tb_msg[++y] = [];
         tb_msg[y][x] = ('0' + parseInt(ant_NumberWeek).toString()).slice(-2);
 
-        var weekDay = [7, 1, 2, 3, 4, 5, 6][(new Date(kwargs['year'], month, 1)).getDay()];
+        var weekDay = [6, 0, 1, 2, 3, 4, 5][(new Date(kwargs['year'], month, 1)).getDay()];
 
-        for (x = 1; x < weekDay; x++) {
+        for (x = 0; x <= weekDay; x++) {
             tb_msg[y][x] = '  ';
         }
 
