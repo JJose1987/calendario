@@ -742,59 +742,6 @@ function fontWH(msg = '', maxWidth = 0, typeFont = '##px') {
     return [fontW, auxContext.measureText(msg).actualBoundingBoxAscent, auxContext.font];
 }
 
-// Dibujar poligono regular de n lados
-function drawPoligon(ctx, color, x, y, size, sides, fill = false) {
-    const angle = (2 * Math.PI) / sides;
-
-    ctx.beginPath();
-
-    for (let i = 0; i < sides; i++) {
-        const xPos = x + size * Math.cos(angle * i);
-        const yPos = y + size * Math.sin(angle * i);
-        if (i === 0) {
-            ctx.moveTo(xPos, yPos);
-        } else {
-            ctx.lineTo(xPos, yPos);
-        }
-    }
-
-    if (fill) {
-        ctx.fillStyle = color;
-        ctx.fill();
-    }
-
-    ctx.strokeStyle = color;
-    ctx.closePath();
-    ctx.stroke();
-}
-
-// Dibujar estrella regular de n lados
-function drawStar(ctx, color, x, y, size, sides, fill = false) {
-    const angle = (Math.PI / sides); // Ángulo para los vértices exteriores
-    const radioIn = size / 2; // Radio para los vértices interiores
-
-    ctx.beginPath();
-    for (let i = 0; i < sides * 2; i++) {
-        const radio = i % 2 === 0 ? size : radioIn; // Alternar entre exterior e interior
-        const xPos = x + radio * Math.cos(i * angle);
-        const yPos = y - radio * Math.sin(i * angle); // Invertir Y para el canvas
-        if (i === 0) {
-            ctx.moveTo(xPos, yPos);
-        } else {
-            ctx.lineTo(xPos, yPos);
-        }
-    }
-
-    if (fill) {
-        ctx.fillStyle = color;
-        ctx.fill();
-    }
-    
-    ctx.strokeStyle = color;
-    ctx.closePath();
-    ctx.stroke();
-}
-
 // Dubujar la fase lunar
 function drawMoon(ctx, color, x, y, size, fase) {
     // Dibuja la luna llena
@@ -834,6 +781,8 @@ function drawMoon(ctx, color, x, y, size, fase) {
 
     ctx.fillStyle = InversoColor(color);
     ctx.fill();
+    
+    ctx.restore();
 }
 
 // Dibujar el cnv
@@ -1015,7 +964,7 @@ function draw(cnv) {
                     if (yourparty[ind_p1] == tb_msg[y][x]) {
                         ind_p1++;
 
-                        drawPoligon(ctx, InversoColor(kwargs['color']), aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 10, true);
+                        drawPoligon(ctx, {color: InversoColor(kwargs['color']), x: aux_x + (infoFont[0] / 2), y: aux_y - (infoFont[1] / 2), size: infoFont[0] / 1.5, sides: 10, fill: true});
 
                         ctx.fillStyle = kwargs['color'];
                         ctx.font = 'bold italic ' + infoFont[2];
@@ -1025,10 +974,10 @@ function draw(cnv) {
                         ind_p0++;
 
                         if (yourparty.includes(parseInt(tb_msg[y][x]))) {
-                            drawPoligon(ctx, kwargs['color'], aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 5, true);
+                            drawPoligon(ctx, {color: kwargs['color'], x: aux_x + (infoFont[0] / 2), y: aux_y - (infoFont[1] / 2), size: infoFont[0] / 1.5, sides: 5, fill: true});
                             ctx.fillStyle =  InversoColor(kwargs['color']);
                         } else {
-                            drawPoligon(ctx, InversoColor(kwargs['color']), aux_x + (infoFont[0] / 2), aux_y - (infoFont[1] / 2), infoFont[0] / 1.5, 5, true);
+                            drawPoligon(ctx, {color: InversoColor(kwargs['color']), x: aux_x + (infoFont[0] / 2), y: aux_y - (infoFont[1] / 2), size: infoFont[0] / 1.5, sides: 5, fill: true});
                             ctx.fillStyle = kwargs['color'];
                         }
 
