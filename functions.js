@@ -892,7 +892,7 @@ function draw(cnv) {
 
         var weekDay = [6, 0, 1, 2, 3, 4, 5][(new Date(kwargs['year'], month, 1)).getDay()];
 
-        for (x = 0; x <= weekDay; x++) {
+        for (x = 1; x <= weekDay; x++) {
             tb_msg[y][x] = '  ';
         }
 
@@ -964,7 +964,7 @@ function draw(cnv) {
                     if (yourparty[ind_p1] == tb_msg[y][x]) {
                         ind_p1++;
 
-                        drawPoligon(ctx, {color: InversoColor(kwargs['color']), x: aux_x + (infoFont[0] / 2), y: aux_y - (infoFont[1] / 2), size: infoFont[0] / 1.5, sides: 10, fill: true});
+                        drawPoligon(ctx, {color: InversoColor(kwargs['color']), x: aux_x + (infoFont[0] / 2), y: aux_y - (infoFont[1] / 2), size: infoFont[0] / 1.4, sides: 8, fill: true, rotate: 22.5});
 
                         ctx.fillStyle = kwargs['color'];
                         ctx.font = 'bold italic ' + infoFont[2];
@@ -974,10 +974,10 @@ function draw(cnv) {
                         ind_p0++;
 
                         if (yourparty.includes(parseInt(tb_msg[y][x]))) {
-                            drawPoligon(ctx, {color: kwargs['color'], x: aux_x + (infoFont[0] / 2), y: aux_y - (infoFont[1] / 2), size: infoFont[0] / 1.5, sides: 5, fill: true});
+                            drawPoligon(ctx, {color: kwargs['color'], x: aux_x + (infoFont[0] / 2), y: aux_y - (infoFont[1] / 2), size: infoFont[0] / 1.3, sides: 4, fill: true, rotate: 45});
                             ctx.fillStyle =  InversoColor(kwargs['color']);
                         } else {
-                            drawPoligon(ctx, {color: InversoColor(kwargs['color']), x: aux_x + (infoFont[0] / 2), y: aux_y - (infoFont[1] / 2), size: infoFont[0] / 1.5, sides: 5, fill: true});
+                            drawPoligon(ctx, {color: InversoColor(kwargs['color']), x: aux_x + (infoFont[0] / 2), y: aux_y - (infoFont[1] / 2), size: infoFont[0] / 1.3, sides: 4, fill: true, rotate: 45});
                             ctx.fillStyle = kwargs['color'];
                         }
 
