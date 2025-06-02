@@ -965,7 +965,7 @@ function draw(cnv) {
                     if (yourparty[ind_p1] == tb_msg[y][x]) {
                         ind_p1++;
 
-                        drawPoligon(ctx, {color: InversoColor(kwargs['color']), x: aux_x + (infoFont[0] / 2), y: aux_y - (infoFont[1] / 2), size: infoFont[0] / 1.4, sides: 8, fill: true, rotate: 22.5});
+                        drawPoligon(ctx, {color: InversoColor(kwargs['color']), x: aux_x + (infoFont[0] / 2), y: aux_y - (infoFont[1] / 2), size: infoFont[0] / 1.4, sides: 5, fill: true, rotate: 22.5});
 
                         ctx.fillStyle = kwargs['color'];
                         ctx.font = 'bold italic ' + infoFont[2];
