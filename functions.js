@@ -230,10 +230,10 @@ function renderCalendar(year, month) {
         }
 
         // Rellenar los días previos al primer día del mes
-        for (let i = 1; i < firstDay; i++) {
-        $("<div>")
-            .addClass("day disabled")
-            .appendTo($("#calendar"));
+        for (let i = 1; i < (firstDay == 0?7:firstDay); i++) {
+            $("<div>")
+                .addClass("day disabled")
+                .appendTo($("#calendar"));
         }
 
         // Rellenar los días del mes
