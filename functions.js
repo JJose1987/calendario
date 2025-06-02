@@ -941,12 +941,13 @@ function draw(cnv) {
                 if (x != 0 && y != 0 && tb_msg[y][x] != '  ') {
                     var moon = (new Date(kwargs['year'], month, tb_msg[y][x])).moonfase()[1];
                     drawMoon(ctx, InversoColor(kwargs['color']), aux_x, aux_y + (infoFont[1] / 2), q * 5, moon);
-                    
+
+                    // 
                     if (typeof kwargs['dayev'][parseInt(tb_msg[y][x]) - 1] != 'undefined') {
                         var infoFont0 = fontWH('#'.repeat((tb_msg[0].toString()).length * 3), cnv.width * (1 - 0.20), typeFont);
                         ctx.font = infoFont0[2];
                         ctx.fillStyle = InversoColor(kwargs['color']);
-                        ctx.fillText(kwargs['dayev'][parseInt(tb_msg[y][x]) - 1], aux_x + 10, (aux_y + 5) + (infoFont[1] / 2));
+                        ctx.fillText(kwargs['dayev'][parseInt(tb_msg[y][x]) - 1], aux_x + (q * 10), (aux_y + q * 5) + (infoFont[1] / 2));
                     }
                 }
 
