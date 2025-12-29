@@ -787,7 +787,7 @@ function drawMoon(ctx, color, x, y, size, fase) {
 
 // Dibujar el cnv
 function draw(cnv) {
-    var q = 22;
+    var q = 10;
     cnv.width  = q * 595;
     cnv.height = q * 842;
 
@@ -1005,3 +1005,4 @@ function draw(cnv) {
         ctx.fillText(kwargs['year'], (x * (w / 8)) + 10, ((y + 1) * (h / 15)) + (h / 2));
     }
 }
+
